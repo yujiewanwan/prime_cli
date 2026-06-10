@@ -1,45 +1,82 @@
 # primecli
 
-CLI 程序，用于 Agent（OpenCode / Claude Code / HermesAgent / Codex 等）与 PrimeContact 系统交互。
+CLI tool for AI Agents (OpenCode / Claude Code / HermesAgent / Codex) to interact with the PrimeContact system.
 
-## 安装
+[English](#primecli) | [中文](README_CN.md)
+
+## Installation
 
 ```bash
 npm install -g primecli
 ```
 
-## 快速开始
+## AI Agent Setup
+
+Install the agent skill so your AI agent knows how to use primecli:
 
 ```bash
-# 登录（非交互模式）
+npx skills add yujiewanwan/prime_cli
+```
+
+## Quick Start
+
+```bash
+# Login (non-interactive)
 primecli auth login --username admin --password admin123
 
-# 登录（交互模式，密码不显示）
+# Login (interactive, password hidden)
 primecli auth login
 
-# 查看当前登录用户
+# View current profile
 primecli auth profile
 ```
 
-## 命令
+## Commands
 
-| 命令 | 说明 |
+### Authentication
+
+| Command | Description |
 |---|---|
-| `primecli auth login` | 登录并保存 token，支持 `--username` / `--password` 参数 |
-| `primecli auth profile` | 读取本地 token，调用 API 获取用户 profile |
+| `primecli auth login` | Login and save token. Supports `--username` / `--password` |
+| `primecli auth profile` | Fetch and display current user profile |
 
-## 配置
+### Company
 
-- Token 保存在 `~/.config/primecli/config.json`
-- 默认 API 地址：`https://primeapi.aizee.cc`
-- 可通过环境变量 `PRIMECLI_BASE_URL` 覆盖
+| Command | Description |
+|---|---|
+| `primecli company search -n <name>` | Search companies by name (fuzzy match) |
 
-## 开发
+Options: `--page <page>` (default 1), `--size <size>` (default 10)
+
+### Hot Topics
+
+| Command | Description |
+|---|---|
+| `primecli hot-topics by-date -d <date>` | Query hot topics by date (yyyy-MM-dd) |
+
+Note: Hot topics are T+1. Query yesterday or earlier.
+
+### WeChat Touch
+
+| Command | Description |
+|---|---|
+| `primecli wechat-touch stats` | Get outreach stats for all users |
+| `primecli wechat-touch team-summary` | Get per-user team summary |
+
+Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)
+
+## Configuration
+
+- Token stored at `~/.config/primecli/config.json`
+- Default API base URL: `https://primeapi.aizee.cc`
+- Override with environment variable `PRIMECLI_BASE_URL`
+
+## Development
 
 ```bash
-npm install        # 安装依赖
-npm run build      # 编译 TypeScript
-npm test           # 构建 + 冒烟测试
-npm run lint       # ESLint 检查
-npm run format     # Prettier 格式化
+npm install        # Install dependencies
+npm run build      # Compile TypeScript
+npm test           # Build + smoke test
+npm run lint       # ESLint
+npm run format     # Prettier
 ```
