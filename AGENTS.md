@@ -46,6 +46,7 @@ cd .worktree/<id>-<slug>
 ### 3. Feature Design Doc
 
 - Before coding, write `docs/feature/ISSUE-<id>-<slug>.md`.
+- Write feature docs in Chinese unless the user explicitly requests another language.
 - The feature doc must describe the confirmed requirement, scope, approach, and verification plan.
 - Start coding only after the feature doc has passed human review.
 
