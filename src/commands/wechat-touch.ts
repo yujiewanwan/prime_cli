@@ -7,6 +7,11 @@ type TeamSummaryOptions = {
   endDate?: string;
 };
 
+type DistributeOptions = {
+  userId: string;
+  count: string;
+};
+
 function today(): string {
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -54,6 +59,49 @@ export function registerWechatTouchCommands(program: Command): void {
       const client = createApiClient(config.token);
       const data = await client.get(
         `/api/wechat-touch/team-summary?${params.toString()}`,
+      );
+      console.log(JSON.stringify(data, null, 2));
+    });
+
+  wechatTouch
+    .command("distribution-users")
+    .description("List users available for contact distribution")
+    .action(async () => {
+      const config = await readConfig();
+
+      if (!config.token) {
+        throw new Error("No saved token. Run `primecli auth login` first.");
+      }
+
+      const client = createApiClient(config.token);
+      const data = await client.get(
+        "/api/wechat-touch/distributions/users",
+      );
+      console.log(JSON.stringify(data, null, 2));
+    });
+
+  wechatTouch
+    .command("distribute")
+    .description("Distribute contacts to a user")
+    .requiredOption("-u, --user-id <userId>", "Target user ID")
+    .requiredOption("-c, --count <count>", "Number of contacts to distribute")
+    .action(async (options: DistributeOptions) => {
+      const config = await readConfig();
+
+      if (!config.token) {
+        throw new Error("No saved token. Run `primecli auth login` first.");
+      }
+
+      const count = parseInt(options.count, 10);
+
+      if (isNaN(count) || count < 1 || count > 150) {
+        throw new Error("Count must be a number between 1 and 150.");
+      }
+
+      const client = createApiClient(config.token);
+      const data = await client.post(
+        "/api/wechat-touch/distributions",
+        { userId: options.userId, count },
       );
       console.log(JSON.stringify(data, null, 2));
     });

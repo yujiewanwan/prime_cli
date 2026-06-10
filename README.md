@@ -62,8 +62,11 @@ Note: Hot topics are T+1. Query yesterday or earlier.
 |---|---|
 | `primecli wechat-touch stats` | Get outreach stats for all users |
 | `primecli wechat-touch team-summary` | Get per-user team summary |
+| `primecli wechat-touch distribution-users` | List users available for contact distribution |
+| `primecli wechat-touch distribute -u <id> -c <count>` | Distribute contacts to a user |
 
 Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)
+Distribute options: `-u, --user-id <id>` (required), `-c, --count <count>` (required, 1-150)
 
 ## Configuration
 

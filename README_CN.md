@@ -62,8 +62,11 @@ primecli auth profile
 |---|---|
 | `primecli wechat-touch stats` | 全员触达统计数据 |
 | `primecli wechat-touch team-summary` | 按个人维度的团队触达汇总 |
+| `primecli wechat-touch distribution-users` | 查询可分发人员列表 |
+| `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户 |
 
 团队汇总参数：`--start-date <日期>`，`--end-date <日期>`（默认均为当天）
+分发参数：`-u, --user-id <id>`（必填），`-c, --count <count>`（必填，1-150）
 
 ## 配置
 
