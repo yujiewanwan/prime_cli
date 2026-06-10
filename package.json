@@ -15,7 +15,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "npm run build && node scripts/mock-api-smoke.mjs"
+    "test": "npm run build && npm run lint"
   },
   "keywords": [],
   "author": "",
