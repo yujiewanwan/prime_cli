@@ -1,6 +1,6 @@
 ---
 name: primecli
-description: Use primecli to interact with the PrimeContact system. This skill provides company search, hot topics query, WeChat touch outreach stats, and team summary. Use when the user asks about companies (查找公司, 搜索公司), hot topics (热点话题, 今日/昨日热点), WeChat touch outreach data (企微触达, 触达统计), or team performance (团队汇总, 触达明细).
+description: Use primecli to interact with the PrimeContact system. This skill provides company search, hot topics query, WeChat touch outreach stats, team summary, and contact distribution. Use when the user asks about companies (查找公司, 搜索公司), hot topics (热点话题, 今日/昨日热点), WeChat touch outreach data (企微触达, 触达统计), team performance (团队汇总, 触达明细), or distributing contacts (分发联系人, 下发线索).
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -65,6 +65,23 @@ primecli wechat-touch team-summary [--start-date <yyyy-MM-dd>] [--end-date <yyyy
 - 返回总体汇总 + 每个用户的明细（userId, username, name, 各维度计数）
 
 **触发**：用户询问"团队汇总"、"各人触达情况"、"团队触达明细"等。
+
+### 联系人分发
+
+```bash
+# 查看可分发人员列表
+primecli wechat-touch distribution-users
+
+# 分发联系人给指定用户
+primecli wechat-touch distribute -u <userId> -c <count>
+```
+
+- `-u, --user-id` — 目标用户 ID（必填）
+- `-c, --count` — 分发数量，范围 1-150（必填）
+- 需要 SUPER_ADMIN 角色
+- 每个用户每天只能分发一次
+
+**触发**：用户询问"分发联系人"、"下发线索"、"分配给谁"、"还有多少可分配"等。
 
 ### 认证
 
