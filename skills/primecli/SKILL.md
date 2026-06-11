@@ -1,6 +1,6 @@
 ---
 name: primecli
-description: Use primecli to interact with the PrimeContact system. This skill provides company search, hot topics query, WeChat touch outreach stats, team summary, and contact distribution. Use when the user asks about companies (查找公司, 搜索公司), hot topics (热点话题, 今日/昨日热点), WeChat touch outreach data (企微触达, 触达统计), team performance (团队汇总, 触达明细), or distributing contacts (分发联系人, 下发线索).
+description: Use primecli to interact with the PrimeContact system. This skill provides company search, hot topics query, WeChat touch outreach stats, follow-up items, group chat content, team summary, and contact distribution. Use when the user asks about companies (查找公司, 搜索公司), hot topics (热点话题, 今日/昨日热点), WeChat touch outreach data (企微触达, 触达统计), follow-up items (触达列表, 触达跟进), group chat messages (群聊聊天记录, 聊天内容), team performance (团队汇总, 触达明细), or distributing contacts (分发联系人, 下发线索).
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -65,6 +65,35 @@ primecli wechat-touch team-summary [--start-date <yyyy-MM-dd>] [--end-date <yyyy
 - 返回总体汇总 + 每个用户的明细（userId, username, name, 各维度计数）
 
 **触发**：用户询问"团队汇总"、"各人触达情况"、"团队触达明细"等。
+
+### 触达跟进列表
+
+```bash
+primecli wechat-touch items [--date <yyyy-MM-dd>] [--group-bound|--no-group-bound] [--page <page>] [--size <size>]
+```
+
+- `--date` — 日期筛选，yyyy-MM-dd 格式（可选）
+- `--group-bound` — 只看已绑定群聊的记录
+- `--no-group-bound` — 只看未绑定群聊的记录
+- `--page` — 页码，默认 0
+- `--size` — 每页条数，默认 50
+- 返回触达跟进列表，每条记录含 `roomId`、`groupBound` 等字段
+
+**触发**：用户询问"触达列表"、"已绑定群聊的触达记录"、"查 roomId"等。
+
+### 群聊聊天内容
+
+```bash
+primecli wechat-touch chat --room-id <roomId> [--page <page>] [--size <size>]
+```
+
+- `--room-id` — 群聊 roomId（必填）
+- `--page` — 页码，默认 0
+- `--size` — 每页条数，默认 50
+- 仅 SUPER_ADMIN 可访问（后端校验）
+- 返回消息列表，含发送人、发送时间、消息类型、消息内容
+
+**触发**：用户要求"查看群聊聊天记录"、"看群聊说了什么"等。
 
 ### 联系人分发
 
