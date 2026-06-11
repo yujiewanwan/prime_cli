@@ -12,6 +12,19 @@ type DistributeOptions = {
   count: string;
 };
 
+type ItemsOptions = {
+  date?: string;
+  groupBound?: boolean;
+  page?: string;
+  size?: string;
+};
+
+type ChatOptions = {
+  roomId: string;
+  page?: string;
+  size?: string;
+};
+
 function today(): string {
   const d = new Date();
   const yyyy = d.getFullYear();
@@ -102,6 +115,58 @@ export function registerWechatTouchCommands(program: Command): void {
       const data = await client.post(
         "/api/wechat-touch/distributions",
         { userId: options.userId, count },
+      );
+      console.log(JSON.stringify(data, null, 2));
+    });
+
+  wechatTouch
+    .command("items")
+    .description("List wechat touch follow-up items")
+    .option("--date <date>", "Filter by date (yyyy-MM-dd)")
+    .option("--group-bound", "Filter by group chat bound status")
+    .option("--no-group-bound", "Filter by group chat unbound status")
+    .option("--page <page>", "Page number", "0")
+    .option("--size <size>", "Page size", "50")
+    .action(async (options: ItemsOptions) => {
+      const config = await readConfig();
+
+      if (!config.token) {
+        throw new Error("No saved token. Run `primecli auth login` first.");
+      }
+
+      const params = new URLSearchParams();
+      if (options.date) params.set("date", options.date);
+      if (options.groupBound !== undefined) params.set("groupBound", String(options.groupBound));
+      params.set("page", options.page ?? "0");
+      params.set("size", options.size ?? "50");
+
+      const client = createApiClient(config.token);
+      const data = await client.get(
+        `/api/wechat-touch/items?${params.toString()}`,
+      );
+      console.log(JSON.stringify(data, null, 2));
+    });
+
+  wechatTouch
+    .command("chat")
+    .description("Get group chat content by roomId")
+    .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
+    .option("--page <page>", "Page number", "0")
+    .option("--size <size>", "Page size", "50")
+    .action(async (options: ChatOptions) => {
+      const config = await readConfig();
+
+      if (!config.token) {
+        throw new Error("No saved token. Run `primecli auth login` first.");
+      }
+
+      const params = new URLSearchParams();
+      params.set("page", options.page ?? "0");
+      params.set("size", options.size ?? "50");
+
+      const client = createApiClient(config.token);
+      const data = await client.get(
+        `/api/wechat-touch/chat/${options.roomId}?${params.toString()}`,
       );
       console.log(JSON.stringify(data, null, 2));
     });
