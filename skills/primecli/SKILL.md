@@ -66,20 +66,22 @@ primecli wechat-touch team-summary [--start-date <yyyy-MM-dd>] [--end-date <yyyy
 
 **触发**：用户询问"团队汇总"、"各人触达情况"、"团队触达明细"等。
 
-### 触达跟进列表
+### 好友列表
 
 ```bash
-primecli wechat-touch items [--date <yyyy-MM-dd>] [--group-bound|--no-group-bound] [--page <page>] [--size <size>]
+primecli wechat-touch friends [--user-id <userId>] [--phone <phone>] [--wechat-nickname <nickname>] [--group-bound|--no-group-bound] [--page <page>] [--size <size>]
 ```
 
-- `--date` — 日期筛选，yyyy-MM-dd 格式（可选）
+- `--user-id` — 按归属用户 ID 筛选，SUPER_ADMIN/SALES_DIRECTOR 不传则查全部（可选）
+- `--phone` — 按手机号模糊筛选（可选）
+- `--wechat-nickname` — 按微信昵称模糊筛选（可选）
 - `--group-bound` — 只看已绑定群聊的记录
 - `--no-group-bound` — 只看未绑定群聊的记录
-- `--page` — 页码，默认 0
-- `--size` — 每页条数，默认 50
-- 返回触达跟进列表，每条记录含 `roomId`、`groupBound` 等字段
+- `--page` — 页码，默认 1
+- `--size` — 每页条数，默认 20
+- 仅返回已通过好友的触达记录，含 `batchDate`、`username`、`roomId` 等字段
 
-**触发**：用户询问"触达列表"、"已绑定群聊的触达记录"、"查 roomId"等。
+**触发**：用户询问"好友列表"、"已通过的好友"、"某手机号的触达记录"、"某销售的跟进进度"、"已绑定群聊的好友"等。
 
 ### 群聊聊天内容
 
