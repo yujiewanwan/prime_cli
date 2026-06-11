@@ -93,3 +93,8 @@ These bias toward caution. Use judgment for trivial tasks.
 - Turn tasks into verifiable goals (eg. "Write tests for invalid inputs, then make them pass").
 - For multi-step tasks, state a brief plan with verification steps.
 - Loop until verified — don't stop at "looks right".
+
+### 5. Skill Sync
+
+- 修改 CLI 命令（新增/删除/修改参数、子命令等）时，必须同步更新 `skills/primecli/SKILL.md` 中的对应命令文档和触发短语。
+- 二者应保持一致，避免 Agent 技能描述与实际代码行为脱节。
