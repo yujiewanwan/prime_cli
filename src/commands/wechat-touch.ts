@@ -14,6 +14,7 @@ type DistributeOptions = {
 
 type ItemsOptions = {
   date?: string;
+  userId?: string;
   groupBound?: boolean;
   page?: string;
   size?: string;
@@ -123,9 +124,10 @@ export function registerWechatTouchCommands(program: Command): void {
     .command("items")
     .description("List wechat touch follow-up items")
     .option("--date <date>", "Filter by date (yyyy-MM-dd)")
+    .option("--user-id <userId>", "Filter by owner user ID")
     .option("--group-bound", "Filter by group chat bound status")
     .option("--no-group-bound", "Filter by group chat unbound status")
-    .option("--page <page>", "Page number", "0")
+    .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "50")
     .action(async (options: ItemsOptions) => {
       const config = await readConfig();
@@ -136,8 +138,9 @@ export function registerWechatTouchCommands(program: Command): void {
 
       const params = new URLSearchParams();
       if (options.date) params.set("date", options.date);
+      if (options.userId) params.set("userId", options.userId);
       if (options.groupBound !== undefined) params.set("groupBound", String(options.groupBound));
-      params.set("page", options.page ?? "0");
+      params.set("page", options.page ?? "1");
       params.set("size", options.size ?? "50");
 
       const client = createApiClient(config.token);
@@ -151,8 +154,8 @@ export function registerWechatTouchCommands(program: Command): void {
     .command("chat")
     .description("Get group chat content by roomId")
     .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
-    .option("--page <page>", "Page number", "0")
-    .option("--size <size>", "Page size", "50")
+    .option("--page <page>", "Page number", "1")
+    .option("--size <size>", "Page size", "20")
     .action(async (options: ChatOptions) => {
       const config = await readConfig();
 
@@ -161,12 +164,12 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const params = new URLSearchParams();
-      params.set("page", options.page ?? "0");
-      params.set("size", options.size ?? "50");
+      params.set("page", options.page ?? "1");
+      params.set("size", options.size ?? "20");
 
       const client = createApiClient(config.token);
       const data = await client.get(
-        `/api/wechat-touch/chat/${options.roomId}?${params.toString()}`,
+        `/api/wechat-touch/rooms/${options.roomId}/messages?${params.toString()}`,
       );
       console.log(JSON.stringify(data, null, 2));
     });
