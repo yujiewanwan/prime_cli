@@ -69,13 +69,14 @@ primecli wechat-touch team-summary [--start-date <yyyy-MM-dd>] [--end-date <yyyy
 ### 触达跟进列表
 
 ```bash
-primecli wechat-touch items [--date <yyyy-MM-dd>] [--group-bound|--no-group-bound] [--page <page>] [--size <size>]
+primecli wechat-touch items [--date <yyyy-MM-dd>] [--user-id <userId>] [--group-bound|--no-group-bound] [--page <page>] [--size <size>]
 ```
 
 - `--date` — 日期筛选，yyyy-MM-dd 格式（可选）
+- `--user-id` — 按负责人筛选（可选，不传默认当前用户）
 - `--group-bound` — 只看已绑定群聊的记录
 - `--no-group-bound` — 只看未绑定群聊的记录
-- `--page` — 页码，默认 0
+- `--page` — 页码，默认 1
 - `--size` — 每页条数，默认 50
 - 返回触达跟进列表，每条记录含 `roomId`、`groupBound` 等字段
 
@@ -88,8 +89,8 @@ primecli wechat-touch chat --room-id <roomId> [--page <page>] [--size <size>]
 ```
 
 - `--room-id` — 群聊 roomId（必填）
-- `--page` — 页码，默认 0
-- `--size` — 每页条数，默认 50
+- `--page` — 页码，默认 1
+- `--size` — 每页条数，默认 20
 - 仅 SUPER_ADMIN 可访问（后端校验）
 - 返回消息列表，含发送人、发送时间、消息类型、消息内容
 
