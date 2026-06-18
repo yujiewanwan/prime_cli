@@ -10,6 +10,12 @@ CLI tool for AI Agents (OpenCode / Claude Code / HermesAgent / Codex) to interac
 npm install -g yujiewanwan/prime_cli
 ```
 
+## Uninstallation
+
+```bash
+npm uninstall -g primecli
+```
+
 ## AI Agent Setup
 
 Install the agent skill so your AI agent knows how to use primecli:
