@@ -48,14 +48,6 @@ primecli auth profile
 
 Options: `--page <page>` (default 1), `--size <size>` (default 10)
 
-### Hot Topics
-
-| Command | Description |
-|---|---|
-| `primecli hot-topics by-date -d <date>` | Query hot topics by date (yyyy-MM-dd) |
-
-Note: Hot topics are T+1. Query yesterday or earlier.
-
 ### WeChat Touch
 
 | Command | Description |

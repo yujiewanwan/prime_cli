@@ -3,7 +3,6 @@
 import { Command } from "commander";
 import { registerAuthCommands } from "./commands/auth.js";
 import { registerCompanyCommands } from "./commands/company.js";
-import { registerHotTopicsCommands } from "./commands/hot-topics.js";
 import { registerWechatTouchCommands } from "./commands/wechat-touch.js";
 
 const program = new Command();
@@ -15,7 +14,6 @@ program
 
 registerAuthCommands(program);
 registerCompanyCommands(program);
-registerHotTopicsCommands(program);
 registerWechatTouchCommands(program);
 
 program.parseAsync(process.argv).catch((error: unknown) => {
