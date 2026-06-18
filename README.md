@@ -7,7 +7,7 @@ CLI tool for AI Agents (OpenCode / Claude Code / HermesAgent / Codex) to interac
 ## Installation
 
 ```bash
-npm install -g primecli
+npm install -g yujiewanwan/prime_cli
 ```
 
 ## AI Agent Setup
