@@ -4,6 +4,8 @@ import { dirname, join } from "node:path";
 
 export type PrimeCliConfig = {
   token?: string;
+  role?: string;
+  roles?: string[];
 };
 
 export const CONFIG_PATH = join(

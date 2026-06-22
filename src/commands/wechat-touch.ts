@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { createApiClient } from "../lib/api-client.js";
 import { readConfig } from "../lib/config.js";
+import { requireRole } from "../lib/roles.js";
 
 type TeamSummaryOptions = {
   startDate?: string;
@@ -80,6 +81,7 @@ export function registerWechatTouchCommands(program: Command): void {
   wechatTouch
     .command("distribution-users")
     .description("List users available for contact distribution")
+    .hook("preAction", requireRole("SUPER_ADMIN"))
     .action(async () => {
       const config = await readConfig();
 
@@ -88,9 +90,7 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const client = createApiClient(config.token);
-      const data = await client.get(
-        "/api/wechat-touch/distributions/users",
-      );
+      const data = await client.get("/api/wechat-touch/distributions/users");
       console.log(JSON.stringify(data, null, 2));
     });
 
@@ -99,6 +99,7 @@ export function registerWechatTouchCommands(program: Command): void {
     .description("Distribute contacts to a user")
     .requiredOption("-u, --user-id <userId>", "Target user ID")
     .requiredOption("-c, --count <count>", "Number of contacts to distribute")
+    .hook("preAction", requireRole("SUPER_ADMIN"))
     .action(async (options: DistributeOptions) => {
       const config = await readConfig();
 
@@ -113,10 +114,10 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const client = createApiClient(config.token);
-      const data = await client.post(
-        "/api/wechat-touch/distributions",
-        { userId: options.userId, count },
-      );
+      const data = await client.post("/api/wechat-touch/distributions", {
+        userId: options.userId,
+        count,
+      });
       console.log(JSON.stringify(data, null, 2));
     });
 
@@ -139,7 +140,8 @@ export function registerWechatTouchCommands(program: Command): void {
       const params = new URLSearchParams();
       if (options.date) params.set("date", options.date);
       if (options.userId) params.set("userId", options.userId);
-      if (options.groupBound !== undefined) params.set("groupBound", String(options.groupBound));
+      if (options.groupBound !== undefined)
+        params.set("groupBound", String(options.groupBound));
       params.set("page", options.page ?? "1");
       params.set("size", options.size ?? "50");
 
@@ -156,6 +158,7 @@ export function registerWechatTouchCommands(program: Command): void {
     .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
     .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "20")
+    .hook("preAction", requireRole("SUPER_ADMIN"))
     .action(async (options: ChatOptions) => {
       const config = await readConfig();
 
