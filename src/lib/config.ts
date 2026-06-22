@@ -6,6 +6,7 @@ export type PrimeCliConfig = {
   token?: string;
   role?: string;
   roles?: string[];
+  baseUrl?: string;
 };
 
 export const CONFIG_PATH = join(

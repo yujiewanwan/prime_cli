@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { createApiClient } from "../lib/api-client.js";
 import { readConfig } from "../lib/config.js";
+import { parseIntegerOption } from "../lib/validation.js";
 
 type CompanySearchOptions = {
   name: string;
@@ -18,6 +19,8 @@ export function registerCompanyCommands(program: Command): void {
     .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "10")
     .action(async (options: CompanySearchOptions) => {
+      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
+      const size = parseIntegerOption(options.size, "Size", 10, { min: 1 });
       const config = await readConfig();
 
       if (!config.token) {
@@ -26,11 +29,11 @@ export function registerCompanyCommands(program: Command): void {
 
       const params = new URLSearchParams({
         name: options.name,
-        page: options.page ?? "1",
-        size: options.size ?? "10",
+        page: String(page),
+        size: String(size),
       });
 
-      const client = createApiClient(config.token);
+      const client = createApiClient(config);
       const data = await client.get(`/api/companies?${params.toString()}`);
       console.log(JSON.stringify(data, null, 2));
     });

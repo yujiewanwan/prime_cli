@@ -62,16 +62,26 @@ Options: `--page <page>` (default 1), `--size <size>` (default 10)
 | `primecli wechat-touch team-summary`                  | Get per-user team summary                                         |
 | `primecli wechat-touch distribution-users`            | List users available for contact distribution. `SUPER_ADMIN` only |
 | `primecli wechat-touch distribute -u <id> -c <count>` | Distribute contacts to a user. `SUPER_ADMIN` only                 |
-| `primecli wechat-touch chat --room-id <roomId>`       | Get group chat content. `SUPER_ADMIN` only                        |
+| `primecli wechat-touch items`                         | List follow-up items, including bound group chat IDs              |
+| `primecli wechat-touch chat --room-id <id>`           | Get group chat content by room ID. `SUPER_ADMIN` only             |
 
 Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)
 Distribute options: `-u, --user-id <id>` (required), `-c, --count <count>` (required, 1-150)
+Items options: `--date <date>`, `--user-id <userId>`, `--group-bound`, `--no-group-bound`, `--page <page>` (default 1), `--size <size>` (default 50)
+Chat options: `--room-id <id>` (required), `--page <page>` (default 1), `--size <size>` (default 20)
 
 ## Configuration
 
-- Token and current user role stored at `~/.config/primecli/config.json`
+- Token, current user role, and optional `baseUrl` stored at `~/.config/primecli/config.json`
 - Default API base URL: `https://primeapi.aizee.cc`
-- Override with environment variable `PRIMECLI_BASE_URL`
+- API base URL priority: `PRIMECLI_BASE_URL` > config `baseUrl` > default URL
+
+## Role Access Control
+
+- Commands without an explicit role requirement are allowed for any logged-in user; backend authorization remains the final guard.
+- Commands that call role-restricted backend APIs must declare the required role in the CLI with `requireRole(...)`.
+- When adding a new role-restricted command, update the README and agent skill docs with the required role.
+- `SUPER_ADMIN` only commands today: `wechat-touch chat`, `wechat-touch distribute`, and `wechat-touch distribution-users`.
 
 ## Development
 

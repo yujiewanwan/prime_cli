@@ -56,22 +56,32 @@ primecli auth profile
 
 ### 企微触达
 
-| 命令                                                  | 说明                                   |
-| ----------------------------------------------------- | -------------------------------------- |
-| `primecli wechat-touch stats`                         | 全员触达统计数据                       |
-| `primecli wechat-touch team-summary`                  | 按个人维度的团队触达汇总               |
-| `primecli wechat-touch distribution-users`            | 查询可分发人员列表，仅 `SUPER_ADMIN`   |
-| `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户，仅 `SUPER_ADMIN` |
-| `primecli wechat-touch chat --room-id <roomId>`       | 查看群聊聊天内容，仅 `SUPER_ADMIN`     |
+| 命令                                                  | 说明                                         |
+| ----------------------------------------------------- | -------------------------------------------- |
+| `primecli wechat-touch stats`                         | 全员触达统计数据                             |
+| `primecli wechat-touch team-summary`                  | 按个人维度的团队触达汇总                     |
+| `primecli wechat-touch distribution-users`            | 查询可分发人员列表，仅 `SUPER_ADMIN`         |
+| `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户，仅 `SUPER_ADMIN`       |
+| `primecli wechat-touch items`                         | 查询触达跟进列表，包含已绑定群聊 ID          |
+| `primecli wechat-touch chat --room-id <id>`           | 按 roomId 查询群聊聊天内容，仅 `SUPER_ADMIN` |
 
 团队汇总参数：`--start-date <日期>`，`--end-date <日期>`（默认均为当天）
 分发参数：`-u, --user-id <id>`（必填），`-c, --count <count>`（必填，1-150）
+跟进列表参数：`--date <日期>`，`--user-id <userId>`，`--group-bound`，`--no-group-bound`，`--page <页码>`（默认 1），`--size <条数>`（默认 50）
+聊天内容参数：`--room-id <id>`（必填），`--page <页码>`（默认 1），`--size <条数>`（默认 20）
 
 ## 配置
 
-- Token 和当前用户角色保存在 `~/.config/primecli/config.json`
+- Token、当前用户角色和可选的 `baseUrl` 保存在 `~/.config/primecli/config.json`
 - 默认 API 地址：`https://primeapi.aizee.cc`
-- 可通过环境变量 `PRIMECLI_BASE_URL` 覆盖
+- API 地址优先级：`PRIMECLI_BASE_URL` > 配置文件 `baseUrl` > 默认地址
+
+## 角色权限控制
+
+- 未显式声明角色要求的命令，默认允许已登录用户发起请求；最终权限仍以后端校验为准。
+- 调用后端角色受限接口的命令，必须在 CLI 侧通过 `requireRole(...)` 声明所需角色。
+- 后续新增角色受限命令时，必须同步更新 README 和 Agent Skill 文档中的权限说明。
+- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-touch chat`、`wechat-touch distribute`、`wechat-touch distribution-users`。
 
 ## 开发
 
