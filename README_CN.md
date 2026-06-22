@@ -35,44 +35,48 @@ primecli auth profile
 
 ### 认证
 
-| 命令 | 说明 |
-|---|---|
-| `primecli auth login` | 登录并保存 token，支持 `--username` / `--password` |
-| `primecli auth profile` | 获取并显示当前用户 profile |
+| 命令                    | 说明                                               |
+| ----------------------- | -------------------------------------------------- |
+| `primecli auth login`   | 登录并保存 token，支持 `--username` / `--password` |
+| `primecli auth profile` | 获取并显示当前用户 profile                         |
 
 ### 公司
 
-| 命令 | 说明 |
-|---|---|
+| 命令                                | 说明               |
+| ----------------------------------- | ------------------ |
 | `primecli company search -n <名称>` | 按公司名称模糊搜索 |
 
 参数：`--page <页码>`（默认 1），`--size <条数>`（默认 10）
 
 ### 热点话题
 
-| 命令 | 说明 |
-|---|---|
+| 命令                                    | 说明                             |
+| --------------------------------------- | -------------------------------- |
 | `primecli hot-topics by-date -d <日期>` | 按日期查询热点话题（yyyy-MM-dd） |
 
 注意：热点为 T+1 产出，请查询前一天或更早的日期。
 
 ### 企微触达
 
-| 命令 | 说明 |
-|---|---|
-| `primecli wechat-touch stats` | 全员触达统计数据 |
-| `primecli wechat-touch team-summary` | 按个人维度的团队触达汇总 |
-| `primecli wechat-touch distribution-users` | 查询可分发人员列表 |
-| `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户 |
+| 命令                                                  | 说明                                |
+| ----------------------------------------------------- | ----------------------------------- |
+| `primecli wechat-touch stats`                         | 全员触达统计数据                    |
+| `primecli wechat-touch team-summary`                  | 按个人维度的团队触达汇总            |
+| `primecli wechat-touch distribution-users`            | 查询可分发人员列表                  |
+| `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户                |
+| `primecli wechat-touch items`                         | 查询触达跟进列表，包含已绑定群聊 ID |
+| `primecli wechat-touch chat --room-id <id>`           | 按 roomId 查询群聊聊天内容          |
 
 团队汇总参数：`--start-date <日期>`，`--end-date <日期>`（默认均为当天）
 分发参数：`-u, --user-id <id>`（必填），`-c, --count <count>`（必填，1-150）
+跟进列表参数：`--date <日期>`，`--group-bound`，`--no-group-bound`，`--page <页码>`（默认 0），`--size <条数>`（默认 50）
+聊天内容参数：`--room-id <id>`（必填），`--page <页码>`（默认 0），`--size <条数>`（默认 50）
 
 ## 配置
 
-- Token 保存在 `~/.config/primecli/config.json`
+- Token 和可选的 `baseUrl` 保存在 `~/.config/primecli/config.json`
 - 默认 API 地址：`https://primeapi.aizee.cc`
-- 可通过环境变量 `PRIMECLI_BASE_URL` 覆盖
+- API 地址优先级：`PRIMECLI_BASE_URL` > 配置文件 `baseUrl` > 默认地址
 
 ## 开发
 

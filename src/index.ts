@@ -1,17 +1,26 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
+import { readFileSync } from "node:fs";
 import { registerAuthCommands } from "./commands/auth.js";
 import { registerCompanyCommands } from "./commands/company.js";
 import { registerHotTopicsCommands } from "./commands/hot-topics.js";
 import { registerWechatTouchCommands } from "./commands/wechat-touch.js";
+
+type PackageJson = {
+  version: string;
+};
+
+const packageJson = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+) as PackageJson;
 
 const program = new Command();
 
 program
   .name("primecli")
   .description("CLI for Agent access to PrimeContact")
-  .version("1.0.0");
+  .version(packageJson.version);
 
 registerAuthCommands(program);
 registerCompanyCommands(program);

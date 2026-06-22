@@ -12,10 +12,10 @@
   ],
   "scripts": {
     "build": "tsc",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test": "npm run build && npm run lint"
+    "lint": "eslint src eslint.config.js scripts",
+    "format": "prettier --write README.md README_CN.md package.json eslint.config.js src scripts",
+    "format:check": "prettier --check README.md README_CN.md package.json eslint.config.js src scripts",
+    "test": "npm run build && npm run lint && node scripts/smoke-test.mjs"
   },
   "keywords": [],
   "author": "",

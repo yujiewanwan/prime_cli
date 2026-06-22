@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 
 const DEFAULT_BASE_URL = "https://primeapi.aizee.cc";
+const DEFAULT_TIMEOUT_MS = 10_000;
 
 export type BaseResponse<T> = {
   code: number;
@@ -14,10 +15,19 @@ export type ApiClient = {
   post<T>(path: string, body: unknown): Promise<T>;
 };
 
-export function createApiClient(token?: string): ApiClient {
+export type ApiClientOptions = {
+  token?: string;
+  baseUrl?: string;
+};
+
+export function createApiClient(options: ApiClientOptions = {}): ApiClient {
   const instance = axios.create({
-    baseURL: process.env.PRIMECLI_BASE_URL ?? DEFAULT_BASE_URL,
-    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    baseURL:
+      process.env.PRIMECLI_BASE_URL ?? options.baseUrl ?? DEFAULT_BASE_URL,
+    headers: options.token
+      ? { Authorization: `Bearer ${options.token}` }
+      : undefined,
+    timeout: DEFAULT_TIMEOUT_MS,
   });
 
   return {
@@ -49,6 +59,10 @@ async function unwrap<T>(
 }
 
 function mapAxiosError(error: AxiosError): Error {
+  if (error.code === "ECONNABORTED") {
+    return new Error("Request timed out. Check the API base URL and network.");
+  }
+
   if (error.response?.status === 401) {
     return new Error("Authentication failed. Run `primecli auth login` again.");
   }
@@ -59,5 +73,5 @@ function mapAxiosError(error: AxiosError): Error {
     );
   }
 
-  return new Error(error.message);
+  return new Error(`Network request failed: ${error.message}`);
 }
