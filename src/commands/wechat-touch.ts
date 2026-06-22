@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { createApiClient } from "../lib/api-client.js";
 import { readConfig } from "../lib/config.js";
+import { parseIntegerOption, validateDateOption } from "../lib/validation.js";
 
 type TeamSummaryOptions = {
   startDate?: string;
@@ -49,7 +50,7 @@ export function registerWechatTouchCommands(program: Command): void {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
-      const client = createApiClient(config.token);
+      const client = createApiClient(config);
       const data = await client.get("/api/wechat-touch/stats");
       console.log(JSON.stringify(data, null, 2));
     });
@@ -60,17 +61,23 @@ export function registerWechatTouchCommands(program: Command): void {
     .option("--start-date <date>", "Start date (yyyy-MM-dd)", today())
     .option("--end-date <date>", "End date (yyyy-MM-dd)", today())
     .action(async (options: TeamSummaryOptions) => {
+      const startDate = validateDateOption(
+        options.startDate ?? today(),
+        "Start date",
+      );
+      const endDate = validateDateOption(
+        options.endDate ?? today(),
+        "End date",
+      );
       const config = await readConfig();
 
       if (!config.token) {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
-      const startDate = options.startDate ?? today();
-      const endDate = options.endDate ?? today();
       const params = new URLSearchParams({ startDate, endDate });
 
-      const client = createApiClient(config.token);
+      const client = createApiClient(config);
       const data = await client.get(
         `/api/wechat-touch/team-summary?${params.toString()}`,
       );
@@ -87,10 +94,8 @@ export function registerWechatTouchCommands(program: Command): void {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
-      const client = createApiClient(config.token);
-      const data = await client.get(
-        "/api/wechat-touch/distributions/users",
-      );
+      const client = createApiClient(config);
+      const data = await client.get("/api/wechat-touch/distributions/users");
       console.log(JSON.stringify(data, null, 2));
     });
 
@@ -100,23 +105,21 @@ export function registerWechatTouchCommands(program: Command): void {
     .requiredOption("-u, --user-id <userId>", "Target user ID")
     .requiredOption("-c, --count <count>", "Number of contacts to distribute")
     .action(async (options: DistributeOptions) => {
+      const count = parseIntegerOption(options.count, "Count", 1, {
+        min: 1,
+        max: 150,
+      });
       const config = await readConfig();
 
       if (!config.token) {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
-      const count = parseInt(options.count, 10);
-
-      if (isNaN(count) || count < 1 || count > 150) {
-        throw new Error("Count must be a number between 1 and 150.");
-      }
-
-      const client = createApiClient(config.token);
-      const data = await client.post(
-        "/api/wechat-touch/distributions",
-        { userId: options.userId, count },
-      );
+      const client = createApiClient(config);
+      const data = await client.post("/api/wechat-touch/distributions", {
+        userId: options.userId,
+        count,
+      });
       console.log(JSON.stringify(data, null, 2));
     });
 
@@ -130,6 +133,11 @@ export function registerWechatTouchCommands(program: Command): void {
     .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "50")
     .action(async (options: ItemsOptions) => {
+      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
+      const size = parseIntegerOption(options.size, "Size", 50, { min: 1 });
+      const date = options.date
+        ? validateDateOption(options.date, "Date")
+        : undefined;
       const config = await readConfig();
 
       if (!config.token) {
@@ -137,13 +145,15 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const params = new URLSearchParams();
-      if (options.date) params.set("date", options.date);
+      if (date) params.set("date", date);
       if (options.userId) params.set("userId", options.userId);
-      if (options.groupBound !== undefined) params.set("groupBound", String(options.groupBound));
-      params.set("page", options.page ?? "1");
-      params.set("size", options.size ?? "50");
+      if (options.groupBound !== undefined) {
+        params.set("groupBound", String(options.groupBound));
+      }
+      params.set("page", String(page));
+      params.set("size", String(size));
 
-      const client = createApiClient(config.token);
+      const client = createApiClient(config);
       const data = await client.get(
         `/api/wechat-touch/items?${params.toString()}`,
       );
@@ -157,6 +167,8 @@ export function registerWechatTouchCommands(program: Command): void {
     .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "20")
     .action(async (options: ChatOptions) => {
+      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
+      const size = parseIntegerOption(options.size, "Size", 20, { min: 1 });
       const config = await readConfig();
 
       if (!config.token) {
@@ -164,10 +176,10 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const params = new URLSearchParams();
-      params.set("page", options.page ?? "1");
-      params.set("size", options.size ?? "20");
+      params.set("page", String(page));
+      params.set("size", String(size));
 
-      const client = createApiClient(config.token);
+      const client = createApiClient(config);
       const data = await client.get(
         `/api/wechat-touch/rooms/${options.roomId}/messages?${params.toString()}`,
       );

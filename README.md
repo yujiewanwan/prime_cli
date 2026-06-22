@@ -41,36 +41,40 @@ primecli auth profile
 
 ### Authentication
 
-| Command | Description |
-|---|---|
-| `primecli auth login` | Login and save token. Supports `--username` / `--password` |
-| `primecli auth profile` | Fetch and display current user profile |
+| Command                 | Description                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| `primecli auth login`   | Login and save token. Supports `--username` / `--password` |
+| `primecli auth profile` | Fetch and display current user profile                     |
 
 ### Company
 
-| Command | Description |
-|---|---|
+| Command                             | Description                            |
+| ----------------------------------- | -------------------------------------- |
 | `primecli company search -n <name>` | Search companies by name (fuzzy match) |
 
 Options: `--page <page>` (default 1), `--size <size>` (default 10)
 
 ### WeChat Touch
 
-| Command | Description |
-|---|---|
-| `primecli wechat-touch stats` | Get outreach stats for all users |
-| `primecli wechat-touch team-summary` | Get per-user team summary |
-| `primecli wechat-touch distribution-users` | List users available for contact distribution |
-| `primecli wechat-touch distribute -u <id> -c <count>` | Distribute contacts to a user |
+| Command                                               | Description                                          |
+| ----------------------------------------------------- | ---------------------------------------------------- |
+| `primecli wechat-touch stats`                         | Get outreach stats for all users                     |
+| `primecli wechat-touch team-summary`                  | Get per-user team summary                            |
+| `primecli wechat-touch distribution-users`            | List users available for contact distribution        |
+| `primecli wechat-touch distribute -u <id> -c <count>` | Distribute contacts to a user                        |
+| `primecli wechat-touch items`                         | List follow-up items, including bound group chat IDs |
+| `primecli wechat-touch chat --room-id <id>`           | Get group chat content by room ID                    |
 
 Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)
 Distribute options: `-u, --user-id <id>` (required), `-c, --count <count>` (required, 1-150)
+Items options: `--date <date>`, `--user-id <userId>`, `--group-bound`, `--no-group-bound`, `--page <page>` (default 1), `--size <size>` (default 50)
+Chat options: `--room-id <id>` (required), `--page <page>` (default 1), `--size <size>` (default 20)
 
 ## Configuration
 
-- Token stored at `~/.config/primecli/config.json`
+- Token and optional `baseUrl` stored at `~/.config/primecli/config.json`
 - Default API base URL: `https://primeapi.aizee.cc`
-- Override with environment variable `PRIMECLI_BASE_URL`
+- API base URL priority: `PRIMECLI_BASE_URL` > config `baseUrl` > default URL
 
 ## Development
 

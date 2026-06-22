@@ -25,6 +25,7 @@ export function registerAuthCommands(program: Command): void {
     .option("--username <username>", "PrimeContact username")
     .option("--password <password>", "PrimeContact password")
     .action(async (options: LoginOptions) => {
+      const config = await readConfig();
       const username = options.username ?? (await promptVisible("Username: "));
       const password = options.password ?? (await promptHidden("Password: "));
 
@@ -35,7 +36,7 @@ export function registerAuthCommands(program: Command): void {
         throw new Error("Password is required.");
       }
 
-      const client = createApiClient();
+      const client = createApiClient(config);
       const data = await client.post<LoginData>("/api/auth/login", {
         username,
         password,
@@ -46,7 +47,6 @@ export function registerAuthCommands(program: Command): void {
         throw new Error("Login succeeded but no token was found in response.");
       }
 
-      const config = await readConfig();
       await writeConfig({ ...config, token });
       console.log("Login succeeded.");
     });
@@ -61,7 +61,7 @@ export function registerAuthCommands(program: Command): void {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
-      const client = createApiClient(config.token);
+      const client = createApiClient(config);
       const profile = await client.get<unknown>("/api/auth/profile");
       console.log(JSON.stringify(profile, null, 2));
     });
