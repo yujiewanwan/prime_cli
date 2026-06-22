@@ -46,7 +46,8 @@
 - 为 `page`、`size`、`count` 等数字参数校验整数范围
 - 保持现有分页默认值不做无依据变更：
   - `company search`: `page=1`, `size=10`
-  - `wechat-touch items/chat`: `page=0`, `size=50`
+  - `wechat-touch items`: `page=1`, `size=50`
+  - `wechat-touch chat`: `page=1`, `size=20`
 - 如果后端分页基准不同，先在文档中说明，不在本 issue 中改变接口语义
 
 ### 6. 网络错误可预期

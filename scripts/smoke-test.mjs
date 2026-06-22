@@ -33,9 +33,9 @@ const cases = [
   },
   {
     name: "invalid date",
-    args: ["hot-topics", "by-date", "--date", "2026-99-99"],
+    args: ["wechat-touch", "team-summary", "--start-date", "2026-99-99"],
     code: 1,
-    stderr: "Date must be a valid date.",
+    stderr: "Start date must be a valid date.",
   },
 ];
 

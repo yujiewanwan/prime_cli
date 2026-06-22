@@ -7,7 +7,13 @@ CLI tool for AI Agents (OpenCode / Claude Code / HermesAgent / Codex) to interac
 ## Installation
 
 ```bash
-npm install -g primecli
+npm install -g yujiewanwan/prime_cli
+```
+
+## Uninstallation
+
+```bash
+npm uninstall -g primecli
 ```
 
 ## AI Agent Setup
@@ -48,14 +54,6 @@ primecli auth profile
 
 Options: `--page <page>` (default 1), `--size <size>` (default 10)
 
-### Hot Topics
-
-| Command                                 | Description                           |
-| --------------------------------------- | ------------------------------------- |
-| `primecli hot-topics by-date -d <date>` | Query hot topics by date (yyyy-MM-dd) |
-
-Note: Hot topics are T+1. Query yesterday or earlier.
-
 ### WeChat Touch
 
 | Command                                               | Description                                          |
@@ -69,8 +67,8 @@ Note: Hot topics are T+1. Query yesterday or earlier.
 
 Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)
 Distribute options: `-u, --user-id <id>` (required), `-c, --count <count>` (required, 1-150)
-Items options: `--date <date>`, `--group-bound`, `--no-group-bound`, `--page <page>` (default 0), `--size <size>` (default 50)
-Chat options: `--room-id <id>` (required), `--page <page>` (default 0), `--size <size>` (default 50)
+Items options: `--date <date>`, `--user-id <userId>`, `--group-bound`, `--no-group-bound`, `--page <page>` (default 1), `--size <size>` (default 50)
+Chat options: `--room-id <id>` (required), `--page <page>` (default 1), `--size <size>` (default 20)
 
 ## Configuration
 

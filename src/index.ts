@@ -4,7 +4,6 @@ import { Command } from "commander";
 import { readFileSync } from "node:fs";
 import { registerAuthCommands } from "./commands/auth.js";
 import { registerCompanyCommands } from "./commands/company.js";
-import { registerHotTopicsCommands } from "./commands/hot-topics.js";
 import { registerWechatTouchCommands } from "./commands/wechat-touch.js";
 
 type PackageJson = {
@@ -24,7 +23,6 @@ program
 
 registerAuthCommands(program);
 registerCompanyCommands(program);
-registerHotTopicsCommands(program);
 registerWechatTouchCommands(program);
 
 program.parseAsync(process.argv).catch((error: unknown) => {

@@ -15,6 +15,7 @@ type DistributeOptions = {
 
 type ItemsOptions = {
   date?: string;
+  userId?: string;
   groupBound?: boolean;
   page?: string;
   size?: string;
@@ -126,12 +127,13 @@ export function registerWechatTouchCommands(program: Command): void {
     .command("items")
     .description("List wechat touch follow-up items")
     .option("--date <date>", "Filter by date (yyyy-MM-dd)")
+    .option("--user-id <userId>", "Filter by owner user ID")
     .option("--group-bound", "Filter by group chat bound status")
     .option("--no-group-bound", "Filter by group chat unbound status")
-    .option("--page <page>", "Page number", "0")
+    .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "50")
     .action(async (options: ItemsOptions) => {
-      const page = parseIntegerOption(options.page, "Page", 0, { min: 0 });
+      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
       const size = parseIntegerOption(options.size, "Size", 50, { min: 1 });
       const date = options.date
         ? validateDateOption(options.date, "Date")
@@ -144,6 +146,7 @@ export function registerWechatTouchCommands(program: Command): void {
 
       const params = new URLSearchParams();
       if (date) params.set("date", date);
+      if (options.userId) params.set("userId", options.userId);
       if (options.groupBound !== undefined) {
         params.set("groupBound", String(options.groupBound));
       }
@@ -161,11 +164,11 @@ export function registerWechatTouchCommands(program: Command): void {
     .command("chat")
     .description("Get group chat content by roomId")
     .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
-    .option("--page <page>", "Page number", "0")
-    .option("--size <size>", "Page size", "50")
+    .option("--page <page>", "Page number", "1")
+    .option("--size <size>", "Page size", "20")
     .action(async (options: ChatOptions) => {
-      const page = parseIntegerOption(options.page, "Page", 0, { min: 0 });
-      const size = parseIntegerOption(options.size, "Size", 50, { min: 1 });
+      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
+      const size = parseIntegerOption(options.size, "Size", 20, { min: 1 });
       const config = await readConfig();
 
       if (!config.token) {
@@ -178,7 +181,7 @@ export function registerWechatTouchCommands(program: Command): void {
 
       const client = createApiClient(config);
       const data = await client.get(
-        `/api/wechat-touch/chat/${options.roomId}?${params.toString()}`,
+        `/api/wechat-touch/rooms/${options.roomId}/messages?${params.toString()}`,
       );
       console.log(JSON.stringify(data, null, 2));
     });
