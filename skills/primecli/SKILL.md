@@ -17,7 +17,15 @@ CLI 程序，供 Agent 与 PrimeContact 系统交互。
   primecli auth login --username <username> --password <password>
   ```
 - 登录成功后 token 保存在 `~/.config/primecli/config.json`
+- 登录成功后会缓存当前用户角色；仅 `SUPER_ADMIN` 可用的命令会在执行前做本地权限校验
 - 若出现 401 或 `Authentication failed`，重新执行登录命令
+
+## 权限规则
+
+- 未明确标注角色要求的命令，默认允许已登录用户请求。
+- 明确标注 `SUPER_ADMIN` 的命令，当前用户不是 `SUPER_ADMIN` 时不要调用。
+- 后续新增受角色限制的接口时，必须在命令文档中标注所需角色。
+- 后端 403 始终作为最终权限兜底。
 
 ## 命令
 
@@ -80,7 +88,7 @@ primecli wechat-touch chat --room-id <roomId> [--page <page>] [--size <size>]
 - `--room-id` — 群聊 roomId（必填）
 - `--page` — 页码，默认 1
 - `--size` — 每页条数，默认 20
-- 仅 SUPER_ADMIN 可访问（后端校验）
+- 仅 `SUPER_ADMIN` 可访问；普通用户不要调用
 - 返回消息列表，含发送人、发送时间、消息类型、消息内容
 
 **触发**：用户要求"查看群聊聊天记录"、"看群聊说了什么"等。
@@ -97,7 +105,7 @@ primecli wechat-touch distribute -u <userId> -c <count>
 
 - `-u, --user-id` — 目标用户 ID（必填）
 - `-c, --count` — 分发数量，范围 1-150（必填）
-- 需要 SUPER_ADMIN 角色
+- `distribution-users` 和 `distribute` 均需要 `SUPER_ADMIN` 角色；普通用户不要调用
 - 每个用户每天只能分发一次
 
 **触发**：用户询问"分发联系人"、"下发线索"、"分配给谁"、"还有多少可分配"等。
@@ -111,9 +119,11 @@ primecli auth profile
 
 ## 常见问题
 
-| 错误 | 处理 |
-|------|------|
-| `No saved token` | 执行 `primecli auth login --username <user> --password <pass>` |
-| `Authentication failed` / 401 | Token 过期，重新登录 |
-| `Error: HTTP 500` | 后端异常，告知用户稍后重试 |
-| `primecli: command not found` | 执行 `npm install -g yujiewanwan/prime_cli` |
+| 错误                          | 处理                                                           |
+| ----------------------------- | -------------------------------------------------------------- |
+| `No saved token`              | 执行 `primecli auth login --username <user> --password <pass>` |
+| `Authentication failed` / 401 | Token 过期，重新登录                                           |
+| `requires role: SUPER_ADMIN`  | 当前账号不是 SUPER_ADMIN，不要继续调用该命令                   |
+| `Permission denied` / 403     | 后端拒绝访问，确认账号角色或重新登录                           |
+| `Error: HTTP 500`             | 后端异常，告知用户稍后重试                                     |
+| `primecli: command not found` | 执行 `npm install -g yujiewanwan/prime_cli`                    |

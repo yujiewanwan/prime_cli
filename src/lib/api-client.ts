@@ -67,6 +67,12 @@ function mapAxiosError(error: AxiosError): Error {
     return new Error("Authentication failed. Run `primecli auth login` again.");
   }
 
+  if (error.response?.status === 403) {
+    return new Error(
+      "Permission denied. Your current account does not have access to this command.",
+    );
+  }
+
   if (error.response) {
     return new Error(
       `HTTP ${error.response.status}: ${error.response.statusText}`,

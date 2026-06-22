@@ -3,6 +3,7 @@ import { createInterface } from "node:readline";
 import { Writable } from "node:stream";
 import { createApiClient } from "../lib/api-client.js";
 import { readConfig, writeConfig } from "../lib/config.js";
+import { extractRoles, getPrimaryRole } from "../lib/roles.js";
 
 type LoginOptions = {
   username?: string;
@@ -47,7 +48,19 @@ export function registerAuthCommands(program: Command): void {
         throw new Error("Login succeeded but no token was found in response.");
       }
 
-      await writeConfig({ ...config, token });
+      const profileClient = createApiClient({ ...config, token });
+      const profile = await profileClient.get<unknown>("/api/auth/profile");
+      const roles = extractRoles(profile);
+      const role = getPrimaryRole(roles);
+      const configWithoutRoles = { ...config };
+      delete configWithoutRoles.role;
+      delete configWithoutRoles.roles;
+      await writeConfig({
+        ...configWithoutRoles,
+        token,
+        ...(role ? { role } : {}),
+        ...(roles.length > 1 ? { roles } : {}),
+      });
       console.log("Login succeeded.");
     });
 

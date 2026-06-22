@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { createApiClient } from "../lib/api-client.js";
 import { readConfig } from "../lib/config.js";
+import { requireRole } from "../lib/roles.js";
 import { parseIntegerOption, validateDateOption } from "../lib/validation.js";
 
 type TeamSummaryOptions = {
@@ -10,7 +11,7 @@ type TeamSummaryOptions = {
 
 type DistributeOptions = {
   userId: string;
-  count: string;
+  count: number;
 };
 
 type ItemsOptions = {
@@ -87,6 +88,7 @@ export function registerWechatTouchCommands(program: Command): void {
   wechatTouch
     .command("distribution-users")
     .description("List users available for contact distribution")
+    .hook("preAction", requireRole("SUPER_ADMIN"))
     .action(async () => {
       const config = await readConfig();
 
@@ -103,12 +105,14 @@ export function registerWechatTouchCommands(program: Command): void {
     .command("distribute")
     .description("Distribute contacts to a user")
     .requiredOption("-u, --user-id <userId>", "Target user ID")
-    .requiredOption("-c, --count <count>", "Number of contacts to distribute")
+    .requiredOption(
+      "-c, --count <count>",
+      "Number of contacts to distribute",
+      (value: string) =>
+        parseIntegerOption(value, "Count", 1, { min: 1, max: 150 }),
+    )
+    .hook("preAction", requireRole("SUPER_ADMIN"))
     .action(async (options: DistributeOptions) => {
-      const count = parseIntegerOption(options.count, "Count", 1, {
-        min: 1,
-        max: 150,
-      });
       const config = await readConfig();
 
       if (!config.token) {
@@ -118,7 +122,7 @@ export function registerWechatTouchCommands(program: Command): void {
       const client = createApiClient(config);
       const data = await client.post("/api/wechat-touch/distributions", {
         userId: options.userId,
-        count,
+        count: options.count,
       });
       console.log(JSON.stringify(data, null, 2));
     });
@@ -166,6 +170,7 @@ export function registerWechatTouchCommands(program: Command): void {
     .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
     .option("--page <page>", "Page number", "1")
     .option("--size <size>", "Page size", "20")
+    .hook("preAction", requireRole("SUPER_ADMIN"))
     .action(async (options: ChatOptions) => {
       const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
       const size = parseIntegerOption(options.size, "Size", 20, { min: 1 });

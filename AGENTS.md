@@ -21,6 +21,20 @@
 - 凭证存储: `~/.config/primecli/config.json`
 - API base URL 通过环境变量 `PRIMECLI_BASE_URL` 或配置文件指定
 
+### Role Access Control
+
+- `auth login` 会缓存当前用户角色，供 CLI 本地权限判断使用。
+- CLI 权限控制采用白名单式声明：只有明确标注角色要求的命令才进行本地角色拦截。
+- 未声明角色要求的命令默认允许已登录用户发起请求，最终权限仍由后端兜底。
+- 新增后端受角色限制的接口时，必须同步：
+  - 在对应 commander 命令上增加 `requireRole(...)`。
+  - 在 README / Skill 文档中标注所需角色。
+  - 保留后端 403 作为最终权限兜底。
+- 当前 `SUPER_ADMIN` 专属命令：
+  - `primecli wechat-touch chat`
+  - `primecli wechat-touch distribute`
+  - `primecli wechat-touch distribution-users`
+
 > Build, test, lint commands TBD — add after tooling is set up.
 
 ## Development Workflow
