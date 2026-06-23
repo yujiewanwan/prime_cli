@@ -18,11 +18,21 @@ npm uninstall -g primecli
 
 ## AI Agent 配置
 
-安装 agent skill，让 AI agent 识别和使用 primecli：
+安装 agent skills，让 AI agent 识别和使用 primecli：
 
 ```bash
 npx skills add yujiewanwan/prime_cli
 ```
+
+安装后会提供多个按能力域拆分的 skills：
+
+| Skill | 用途 |
+| ----- | ---- |
+| `primecli-shared` | 通用安装、登录、API 地址、角色权限和安全规则 |
+| `primecli-company` | PrimeContact 公司查询 |
+| `primecli-wechat-contact` | 企微触达统计、跟进列表、群聊内容和联系人分发 |
+| `primecli-wechat-official` | 微信公众号文章和登录态更新 |
+| `primecli-hot-topics` | 从 JSON payload 创建热点 |
 
 ## 快速开始
 
