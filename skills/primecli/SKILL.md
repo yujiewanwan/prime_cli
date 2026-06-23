@@ -1,6 +1,6 @@
 ---
 name: primecli
-description: Use primecli to interact with the PrimeContact system. This skill provides company search, WeChat touch outreach stats, follow-up items, group chat content, team summary, and contact distribution. Use when the user asks about companies (查找公司, 搜索公司), WeChat touch outreach data (企微触达, 触达统计), follow-up items (触达列表, 触达跟进), group chat messages (群聊聊天记录, 聊天内容), team performance (团队汇总, 触达明细), or distributing contacts (分发联系人, 下发线索).
+description: Use primecli to interact with the PrimeContact system. This skill provides company search, WeChat touch outreach stats, follow-up items, group chat content, team summary, contact distribution, WeChat official account article queries, credential updates, and hot topic creation. Use when the user asks about companies (查找公司, 搜索公司), WeChat touch outreach data (企微触达, 触达统计), follow-up items (触达列表, 触达跟进), group chat messages (群聊聊天记录, 聊天内容), team performance (团队汇总, 触达明细), distributing contacts (分发联系人, 下发线索), official account articles (公众号文章), or hot topics (热点).
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -92,6 +92,51 @@ primecli wechat-touch chat --room-id <roomId> [--page <page>] [--size <size>]
 - 返回消息列表，含发送人、发送时间、消息类型、消息内容
 
 **触发**：用户要求"查看群聊聊天记录"、"看群聊说了什么"等。
+
+### 公众号文章
+
+```bash
+# 拉取最新公众号文章，仅 SUPER_ADMIN
+primecli wechat-official articles fetch
+
+# 查询 hot 公众号列表
+primecli wechat-official articles accounts [--tag hot]
+
+# 按 fakeid 和时间窗口查询文章
+primecli wechat-official articles by-fakeid --fakeids <fakeid1,fakeid2> [--date <yyyy-MM-dd>] [--start-time <timestamp>] [--end-time <timestamp>]
+```
+
+- `articles fetch` 需要 `SUPER_ADMIN` 角色；普通用户不要调用。
+- `articles accounts` 默认 `--tag hot`，用于查询热点公众号列表。
+- `articles by-fakeid` 的 `--fakeids` 必填，多个 fakeid 用逗号分隔。
+- `articles by-fakeid` 默认查询当天 00:00:00 到 23:59:59，可用 `--date` 或 `--start-time` / `--end-time` 覆盖。
+
+**触发**：用户询问"拉取公众号文章"、"查询热点公众号"、"按 fakeid 查文章"等。
+
+### 公众号登录态
+
+```bash
+primecli wechat-official credentials update --id <wechatOfficialAccountId> --token <token> --cookie <cookie> [--dry-run]
+```
+
+- 需要 `SUPER_ADMIN` 角色；普通用户不要调用。
+- `--id` 是 `wechat_official_account.id`，不是热点公众号列表里的 `wechat_official_mp_account.id`。
+- `--token` 和 `--cookie` 均必填且不能为空白。
+- `--dry-run` 只输出将要提交的请求，不调用后端。
+
+**触发**：用户要求"更新公众号 token/cookie"、"更新公众号后台登录态"等。
+
+### 热点创建
+
+```bash
+primecli hot-topics create --json <payload.json> [--dry-run]
+```
+
+- `--json` 指向完整热点创建 payload 文件，结构应匹配 `POST /api/hot-topics`。
+- `--dry-run` 只读取并输出 JSON 请求，不写入后端。
+- 不提供热点按日期查询命令。
+
+**触发**：用户要求"创建热点"、"写入热点"、"提交热点 JSON"等。
 
 ### 联系人分发
 

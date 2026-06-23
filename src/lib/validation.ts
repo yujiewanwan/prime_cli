@@ -39,3 +39,11 @@ export function validateDateOption(value: string, name: string): string {
 
   return value;
 }
+
+export function parseUnixTimestampOption(value: string, name: string): number {
+  if (!/^\d+$/.test(value)) {
+    throw new Error(`${name} must be a Unix timestamp.`);
+  }
+
+  return Number(value);
+}

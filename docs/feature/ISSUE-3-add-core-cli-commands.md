@@ -2,11 +2,10 @@
 
 ## 需求概述
 
-为 `primecli` 新增 4 个 CLI 命令，对接 PrimeContact 后端 API：
+为 `primecli` 新增 3 个 CLI 命令，对接 PrimeContact 后端 API：
 1. 公司列表 — 按名称搜索公司
-2. 热点话题 — 按日期查询热点话题
-3. 企微触达统计 — 全员触达数据汇总
-4. 团队汇总 — 按个人维度汇总触达数据（日/时间段）
+2. 企微触达统计 — 全员触达数据汇总
+3. 团队汇总 — 按个人维度汇总触达数据（日/时间段）
 
 ## 命令设计
 
@@ -19,20 +18,13 @@
   - `--size` — 每页条数，默认 10
 - **输出**: 分页结果以 JSON 格式输出
 
-### 2. `primecli hot-topics by-date`
-
-- **后端**: `GET /api/hot-topics/{date}`
-- **参数**:
-  - `--date` / `-d` — 日期，格式 yyyy-MM-dd（必填）
-- **输出**: 话题列表以 JSON 格式输出
-
-### 3. `primecli wechat-touch stats`
+### 2. `primecli wechat-touch stats`
 
 - **后端**: `GET /api/wechat-touch/stats`
 - **参数**: 无
 - **输出**: 全员触达统计（今日、近7日、通过率）以 JSON 格式输出
 
-### 4. `primecli wechat-touch team-summary`
+### 3. `primecli wechat-touch team-summary`
 
 - **后端**: `GET /api/wechat-touch/team-summary?startDate=<start>&endDate=<end>`
 - **参数**:
@@ -45,9 +37,8 @@
 | 文件 | 操作 | 说明 |
 |------|------|------|
 | `src/commands/company.ts` | 新增 | company search 命令 |
-| `src/commands/hot-topics.ts` | 新增 | hot-topics by-date 命令 |
 | `src/commands/wechat-touch.ts` | 新增 | wechat-touch stats / team-summary 命令 |
-| `src/index.ts` | 修改 | 注册 3 个新命令模块 |
+| `src/index.ts` | 修改 | 注册 2 个新命令模块 |
 | `docs/feature/ISSUE-3-add-core-cli-commands.md` | 新增 | 本文档 |
 
 ## 设计决策
