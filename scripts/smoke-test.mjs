@@ -20,6 +20,18 @@ const cases = [
     stdout: "items",
   },
   {
+    name: "wechat-official articles help",
+    args: ["wechat-official", "articles", "--help"],
+    code: 0,
+    stdout: "by-fakeid",
+  },
+  {
+    name: "hot-topics help",
+    args: ["hot-topics", "--help"],
+    code: 0,
+    stdout: "create",
+  },
+  {
     name: "missing token",
     args: ["auth", "profile"],
     code: 1,
@@ -36,6 +48,20 @@ const cases = [
     args: ["wechat-touch", "team-summary", "--start-date", "2026-99-99"],
     code: 1,
     stderr: "Start date must be a valid date.",
+  },
+  {
+    name: "invalid timestamp",
+    args: [
+      "wechat-official",
+      "articles",
+      "by-fakeid",
+      "--fakeids",
+      "fakeid",
+      "--start-time",
+      "bad",
+    ],
+    code: 1,
+    stderr: "Start time must be a Unix timestamp.",
   },
 ];
 

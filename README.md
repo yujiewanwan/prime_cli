@@ -70,6 +70,27 @@ Distribute options: `-u, --user-id <id>` (required), `-c, --count <count>` (requ
 Items options: `--date <date>`, `--user-id <userId>`, `--group-bound`, `--no-group-bound`, `--page <page>` (default 1), `--size <size>` (default 50)
 Chat options: `--room-id <id>` (required), `--page <page>` (default 1), `--size <size>` (default 20)
 
+### WeChat Official Account
+
+| Command                                       | Description                                                       |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| `primecli wechat-official articles fetch`     | Fetch latest WeChat official account articles. `SUPER_ADMIN` only |
+| `primecli wechat-official articles accounts`  | List official accounts by tag. Defaults to `hot`                  |
+| `primecli wechat-official articles by-fakeid` | List articles by fakeid and time window                           |
+| `primecli wechat-official credentials update` | Update official account backend credentials. `SUPER_ADMIN` only   |
+
+Accounts options: `--tag <tag>` (default `hot`)
+By-fakeid options: `--fakeids <fakeids>` (required, comma-separated), `--date <date>` (default today), `--start-time <timestamp>`, `--end-time <timestamp>`
+Credentials update options: `--id <id>` (required), `--token <token>` (required), `--cookie <cookie>` (required), `--dry-run`
+
+### Hot Topics
+
+| Command                      | Description                            |
+| ---------------------------- | -------------------------------------- |
+| `primecli hot-topics create` | Create or replace hot topics from JSON |
+
+Create options: `--json <path>` (required), `--dry-run` (print the request without writing to the backend)
+
 ## Configuration
 
 - Token, current user role, and optional `baseUrl` stored at `~/.config/primecli/config.json`
@@ -81,7 +102,7 @@ Chat options: `--room-id <id>` (required), `--page <page>` (default 1), `--size 
 - Commands without an explicit role requirement are allowed for any logged-in user; backend authorization remains the final guard.
 - Commands that call role-restricted backend APIs must declare the required role in the CLI with `requireRole(...)`.
 - When adding a new role-restricted command, update the README and agent skill docs with the required role.
-- `SUPER_ADMIN` only commands today: `wechat-touch chat`, `wechat-touch distribute`, and `wechat-touch distribution-users`.
+- `SUPER_ADMIN` only commands today: `wechat-touch chat`, `wechat-touch distribute`, `wechat-touch distribution-users`, `wechat-official articles fetch`, and `wechat-official credentials update`.
 
 ## Development
 

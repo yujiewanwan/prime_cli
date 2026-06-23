@@ -34,6 +34,8 @@
   - `primecli wechat-touch chat`
   - `primecli wechat-touch distribute`
   - `primecli wechat-touch distribution-users`
+  - `primecli wechat-official articles fetch`
+  - `primecli wechat-official credentials update`
 
 > Build, test, lint commands TBD — add after tooling is set up.
 

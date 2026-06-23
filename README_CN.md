@@ -70,6 +70,27 @@ primecli auth profile
 跟进列表参数：`--date <日期>`，`--user-id <userId>`，`--group-bound`，`--no-group-bound`，`--page <页码>`（默认 1），`--size <条数>`（默认 50）
 聊天内容参数：`--room-id <id>`（必填），`--page <页码>`（默认 1），`--size <条数>`（默认 20）
 
+### 微信公众号
+
+| 命令                                          | 说明                                   |
+| --------------------------------------------- | -------------------------------------- |
+| `primecli wechat-official articles fetch`     | 拉取最新公众号文章，仅 `SUPER_ADMIN`   |
+| `primecli wechat-official articles accounts`  | 按 tag 查询公众号列表，默认 `hot`      |
+| `primecli wechat-official articles by-fakeid` | 按 fakeid 和时间窗口查询公众号文章     |
+| `primecli wechat-official credentials update` | 更新公众号后台登录态，仅 `SUPER_ADMIN` |
+
+公众号列表参数：`--tag <tag>`（默认 `hot`）
+按 fakeid 查询参数：`--fakeids <fakeids>`（必填，逗号分隔），`--date <日期>`（默认当天），`--start-time <时间戳>`，`--end-time <时间戳>`
+登录态更新参数：`--id <id>`（必填），`--token <token>`（必填），`--cookie <cookie>`（必填），`--dry-run`
+
+### 热点
+
+| 命令                         | 说明                       |
+| ---------------------------- | -------------------------- |
+| `primecli hot-topics create` | 从 JSON 文件创建或覆盖热点 |
+
+热点创建参数：`--json <文件路径>`（必填），`--dry-run`（只输出请求，不写入后端）
+
 ## 配置
 
 - Token、当前用户角色和可选的 `baseUrl` 保存在 `~/.config/primecli/config.json`
@@ -81,7 +102,7 @@ primecli auth profile
 - 未显式声明角色要求的命令，默认允许已登录用户发起请求；最终权限仍以后端校验为准。
 - 调用后端角色受限接口的命令，必须在 CLI 侧通过 `requireRole(...)` 声明所需角色。
 - 后续新增角色受限命令时，必须同步更新 README 和 Agent Skill 文档中的权限说明。
-- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-touch chat`、`wechat-touch distribute`、`wechat-touch distribution-users`。
+- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-touch chat`、`wechat-touch distribute`、`wechat-touch distribution-users`、`wechat-official articles fetch`、`wechat-official credentials update`。
 
 ## 开发
 
