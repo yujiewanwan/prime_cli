@@ -18,11 +18,21 @@ npm uninstall -g primecli
 
 ## AI Agent Setup
 
-Install the agent skill so your AI agent knows how to use primecli:
+Install the agent skills so your AI agent knows how to use primecli:
 
 ```bash
 npx skills add yujiewanwan/prime_cli
 ```
+
+This installs multiple domain-specific skills:
+
+| Skill | Purpose |
+| ----- | ------- |
+| `primecli-shared` | Shared setup, login, base URL, role access control, and safety rules |
+| `primecli-company` | PrimeContact company search |
+| `primecli-wechat-contact` | WeChat touch stats, follow-up items, group chat content, and contact distribution |
+| `primecli-wechat-official` | WeChat official account articles and credential updates |
+| `primecli-hot-topics` | Hot topic creation from JSON payloads |
 
 ## Quick Start
 
