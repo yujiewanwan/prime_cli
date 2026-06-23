@@ -36,7 +36,11 @@ export function extractRoles(profile: unknown): string[] {
   }
 
   return normalizeRoles(
-    profile.role ?? profile.roles ?? profile.authorities ?? profile.authority,
+    profile.role ??
+      profile.roles ??
+      profile.authorities ??
+      profile.authority ??
+      getNestedRoles(profile.user),
   );
 }
 
@@ -81,6 +85,14 @@ function normalizeRoles(value: unknown): string[] {
 function normalizeRole(role: string): string | undefined {
   const normalized = role.trim().replace(/^ROLE_/, "");
   return normalized || undefined;
+}
+
+function getNestedRoles(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  return value.role ?? value.roles ?? value.authorities ?? value.authority;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

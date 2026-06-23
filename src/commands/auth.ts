@@ -15,6 +15,7 @@ type LoginData = {
   accessToken?: string;
   access_token?: string;
   jwt?: string;
+  user?: unknown;
 };
 
 export function registerAuthCommands(program: Command): void {
@@ -50,7 +51,9 @@ export function registerAuthCommands(program: Command): void {
 
       const profileClient = createApiClient({ ...config, token });
       const profile = await profileClient.get<unknown>("/api/auth/profile");
-      const roles = extractRoles(profile);
+      const roles = [
+        ...new Set([...extractRoles(data), ...extractRoles(profile)]),
+      ];
       const role = getPrimaryRole(roles);
       const configWithoutRoles = { ...config };
       delete configWithoutRoles.role;
