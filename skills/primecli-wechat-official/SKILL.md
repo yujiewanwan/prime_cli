@@ -13,7 +13,7 @@ allowed-tools: Bash(primecli:*)
 | 用户意图 | 命令 |
 | --- | --- |
 | 拉取最新公众号文章 | `primecli wechat-official articles fetch` |
-| 查询公众号账号列表 | `primecli wechat-official articles accounts` |
+| 查询公众号账号列表、热点公众号账号 | `primecli wechat-official articles accounts` |
 | 按 fakeid 查询公众号文章 | `primecli wechat-official articles by-fakeid --fakeids <fakeids>` |
 | 更新公众号登录态 | `primecli wechat-official credentials update --id <id> --token <token> --cookie <cookie>` |
 
@@ -26,7 +26,8 @@ primecli wechat-official articles by-fakeid --fakeids <fakeid1,fakeid2> [--date 
 ```
 
 - `articles fetch` 需要 `SUPER_ADMIN`；当前用户不是 `SUPER_ADMIN` 时不要调用。
-- `articles accounts` 默认 `--tag hot`，用于查询热点公众号列表。
+- `articles accounts` 默认 `--tag hot`，用于查询“热点公众号账号列表”，不是 PrimeContact `hot-topics` 的热点话题列表。
+- 用户问“热点有哪些”“某天热点”“有没有热点”时，不要用本 skill；应使用 `primecli-hot-topics` 查询热点话题。
 - `articles by-fakeid` 的 `--fakeids` 必填，多个 fakeid 用逗号分隔。
 - `articles by-fakeid` 默认查询当天 00:00:00 到 23:59:59。
 - `--start-time` 和 `--end-time` 是秒级 Unix timestamp；传入后会覆盖默认日期窗口的对应边界。

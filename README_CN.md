@@ -32,7 +32,7 @@ npx skills add yujiewanwan/prime_cli
 | `primecli-company` | PrimeContact 公司查询 |
 | `primecli-wechat-contact` | 企微触达统计、跟进列表、群聊内容和联系人分发 |
 | `primecli-wechat-official` | 微信公众号文章和登录态更新 |
-| `primecli-hot-topics` | 从 JSON payload 创建热点 |
+| `primecli-hot-topics` | 查询热点日期/详情，以及从 JSON payload 创建热点 |
 
 ## 快速开始
 
