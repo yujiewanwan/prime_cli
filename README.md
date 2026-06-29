@@ -19,21 +19,7 @@ npm install -g yujiewanwan/prime_cli
 npx skills add yujiewanwan/prime_cli -y -g
 ```
 
-## Uninstallation
-
-```bash
-npm uninstall -g primecli
-```
-
-## AI Agent Setup
-
-If you used the one-command installer above, the agent skills are already registered. To register or refresh them manually:
-
-```bash
-npx skills add yujiewanwan/prime_cli -y -g
-```
-
-This installs multiple domain-specific skills:
+Installed agent skills:
 
 | Skill | Purpose |
 | ----- | ------- |
@@ -42,6 +28,12 @@ This installs multiple domain-specific skills:
 | `primecli-wechat-contact` | WeChat touch stats, follow-up items, group chat content, and contact distribution |
 | `primecli-wechat-official` | WeChat official account articles and credential updates |
 | `primecli-hot-topics` | Hot topic date/detail lookup and JSON payload creation |
+
+## Uninstallation
+
+```bash
+npm uninstall -g primecli
+```
 
 ## Quick Start
 

@@ -19,21 +19,7 @@ npm install -g yujiewanwan/prime_cli
 npx skills add yujiewanwan/prime_cli -y -g
 ```
 
-## 卸载
-
-```bash
-npm uninstall -g primecli
-```
-
-## AI Agent 配置
-
-如果已经使用上面的一条命令安装，Agent Skills 已完成注册。如需手动注册或刷新：
-
-```bash
-npx skills add yujiewanwan/prime_cli -y -g
-```
-
-安装后会提供多个按能力域拆分的 skills：
+安装后会注册以下 Agent Skills：
 
 | Skill | 用途 |
 | ----- | ---- |
@@ -42,6 +28,12 @@ npx skills add yujiewanwan/prime_cli -y -g
 | `primecli-wechat-contact` | 企微触达统计、跟进列表、群聊内容和联系人分发 |
 | `primecli-wechat-official` | 微信公众号文章和登录态更新 |
 | `primecli-hot-topics` | 查询热点日期/详情，以及从 JSON payload 创建热点 |
+
+## 卸载
+
+```bash
+npm uninstall -g primecli
+```
 
 ## 快速开始
 
