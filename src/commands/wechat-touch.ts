@@ -9,9 +9,18 @@ type DistributeOptions = {
   count: number;
 };
 
+type StatsOptions = {
+  userId?: string;
+};
+
 type ItemsOptions = {
   date?: string;
   userId?: string;
+  phone?: string;
+  wechatId?: string;
+  wechatNickname?: string;
+  friendAccepted?: boolean;
+  wechatExists?: string;
   groupBound?: boolean;
   page?: string;
   size?: string;
@@ -104,16 +113,23 @@ export function registerWechatTouchCommands(program: Command): void {
 
   wechatTouch
     .command("stats")
-    .description("Get wechat touch stats (all users)")
-    .action(async () => {
+    .description("Get wechat touch stats for current or specified user")
+    .option("--user-id <userId>", "Filter by owner user ID")
+    .action(async (options: StatsOptions) => {
       const config = await readConfig();
 
       if (!config.token) {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
+      const params = new URLSearchParams();
+      if (options.userId) params.set("userId", options.userId);
+
       const client = createApiClient(config);
-      const data = await client.get("/api/wechat-touch/stats");
+      const query = params.toString();
+      const data = await client.get(
+        query ? `/api/wechat-touch/stats?${query}` : "/api/wechat-touch/stats",
+      );
       console.log(JSON.stringify(data, null, 2));
     });
 
@@ -316,6 +332,12 @@ export function registerWechatTouchCommands(program: Command): void {
     .description("List wechat touch follow-up items")
     .option("--date <date>", "Filter by date (yyyy-MM-dd)")
     .option("--user-id <userId>", "Filter by owner user ID")
+    .option("--phone <phone>", "Filter by phone number")
+    .option("--wechat-id <wechatId>", "Filter by WeChat ID")
+    .option("--wechat-nickname <nickname>", "Filter by WeChat nickname")
+    .option("--friend-accepted", "Only accepted friend requests")
+    .option("--no-friend-accepted", "Only not accepted friend requests")
+    .option("--wechat-exists <0|1|2>", "Filter by WeChat search status")
     .option("--group-bound", "Filter by group chat bound status")
     .option("--no-group-bound", "Filter by group chat unbound status")
     .option("--page <page>", "Page number", "1")
@@ -335,6 +357,21 @@ export function registerWechatTouchCommands(program: Command): void {
       const params = new URLSearchParams();
       if (date) params.set("date", date);
       if (options.userId) params.set("userId", options.userId);
+      if (options.phone) params.set("phone", options.phone);
+      if (options.wechatId) params.set("wechatId", options.wechatId);
+      if (options.wechatNickname) {
+        params.set("wechatNickname", options.wechatNickname);
+      }
+      if (options.friendAccepted !== undefined) {
+        params.set("friendAccepted", String(options.friendAccepted));
+      }
+      if (options.wechatExists !== undefined) {
+        const exists = parseIntegerOption(options.wechatExists, "WeChat exists", 0, {
+          min: 0,
+          max: 2,
+        });
+        params.set("wechatExists", String(exists));
+      }
       if (options.groupBound !== undefined) {
         params.set("groupBound", String(options.groupBound));
       }
