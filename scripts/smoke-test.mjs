@@ -51,9 +51,9 @@ const cases = [
   },
   {
     name: "invalid date",
-    args: ["wechat-touch", "team-summary", "--start-date", "2026-99-99"],
+    args: ["wechat-touch", "items", "--date", "2026-99-99"],
     code: 1,
-    stderr: "Start date must be a valid date.",
+    stderr: "Date must be a valid date.",
   },
   {
     name: "invalid timestamp",
