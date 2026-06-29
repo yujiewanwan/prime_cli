@@ -4,11 +4,6 @@ import { readConfig } from "../lib/config.js";
 import { extractRoles, requireRole } from "../lib/roles.js";
 import { parseIntegerOption, validateDateOption } from "../lib/validation.js";
 
-type TeamSummaryOptions = {
-  startDate?: string;
-  endDate?: string;
-};
-
 type DistributeOptions = {
   userId: string;
   count: number;
@@ -241,35 +236,6 @@ export function registerWechatTouchCommands(program: Command): void {
       const query = params.toString();
       const data = await client.get(
         query ? `/api/wechat-touch/stats?${query}` : "/api/wechat-touch/stats",
-      );
-      console.log(JSON.stringify(data, null, 2));
-    });
-
-  wechatTouch
-    .command("team-summary")
-    .description("Get team summary by day or time period")
-    .option("--start-date <date>", "Start date (yyyy-MM-dd)", today())
-    .option("--end-date <date>", "End date (yyyy-MM-dd)", today())
-    .action(async (options: TeamSummaryOptions) => {
-      const startDate = validateDateOption(
-        options.startDate ?? today(),
-        "Start date",
-      );
-      const endDate = validateDateOption(
-        options.endDate ?? today(),
-        "End date",
-      );
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const params = new URLSearchParams({ startDate, endDate });
-
-      const client = createApiClient(config);
-      const data = await client.get(
-        `/api/wechat-touch/team-summary?${params.toString()}`,
       );
       console.log(JSON.stringify(data, null, 2));
     });

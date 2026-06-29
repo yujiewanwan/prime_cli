@@ -1,6 +1,6 @@
 ---
 name: primecli-wechat-contact
-description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, team summaries, follow-up items, group chat content by roomId, distribution user lists, and contact distribution. Use when the user mentions 企微触达, 触达统计, 触达跟进, 群聊记录, 分发联系人, or 下发线索.
+description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, daily todos, group chat content by roomId, distribution user lists, and contact distribution. Use when the user mentions 企微触达, 触达统计, 触达跟进, 今日代办, 群聊记录, 分发联系人, or 下发线索.
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -15,7 +15,6 @@ allowed-tools: Bash(primecli:*)
 | 用户意图 | 命令 |
 | --- | --- |
 | 查看企微触达统计 | `primecli wechat-touch stats` |
-| 查看团队触达汇总 | `primecli wechat-touch team-summary` |
 | 查看触达跟进列表 | `primecli wechat-touch items` |
 | 查看今日代办意向统计 | `primecli wechat-touch daily-todo-summary` |
 | 查看今日代办明细 | `primecli wechat-touch daily-todo` |
@@ -32,17 +31,6 @@ primecli wechat-touch stats
 ```
 
 - 返回全员汇总，包括今日和近 7 日的总线索数、已申请、已通过、已回复、已获取名片、通过率。
-- 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
-
-## 团队汇总
-
-```bash
-primecli wechat-touch team-summary [--start-date <yyyy-MM-dd>] [--end-date <yyyy-MM-dd>]
-```
-
-- `--start-date`：开始日期，默认当天。
-- `--end-date`：结束日期，默认当天。
-- 返回总体汇总和每个用户的明细。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
 
 ## 触达跟进列表
