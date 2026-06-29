@@ -17,7 +17,11 @@ allowed-tools: Bash(primecli:*)
 | 查看企微触达统计 | `primecli wechat-touch stats` |
 | 查看团队触达汇总 | `primecli wechat-touch team-summary` |
 | 查看触达跟进列表 | `primecli wechat-touch items` |
+| 查看今日代办意向统计 | `primecli wechat-touch daily-todo-summary` |
+| 查看今日代办明细 | `primecli wechat-touch daily-todo` |
+| 查看今日触达跟进统计 | `primecli wechat-touch today-stats` |
 | 根据 roomId 查看群聊内容 | `primecli wechat-touch chat --room-id <roomId>` |
+| 查看销售人员（归属员工）列表 | `primecli wechat-touch friend-owners` |
 | 查看可分发人员 | `primecli wechat-touch distribution-users` |
 | 分发联系人 | `primecli wechat-touch distribute -u <userId> -c <count>` |
 
@@ -56,6 +60,41 @@ primecli wechat-touch items [--date <yyyy-MM-dd>] [--user-id <userId>] [--group-
 - 返回记录包含 `roomId`、`groupBound` 等字段，可用于后续查询群聊内容。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
 
+## 今日代办意向统计
+
+```bash
+primecli wechat-touch daily-todo-summary [--user-id <userId>]
+```
+
+- `--user-id`：按负责人筛选；不传则查询当前登录用户。
+- 返回今日需跟进的客户总数，以及 A/B/C/D 等级分布数量。
+- 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
+
+## 今日触达跟进统计
+
+```bash
+primecli wechat-touch today-stats [--user-id <userId>]
+```
+
+- `--user-id`：按负责人筛选。
+- `SUPER_ADMIN` 不传 `--user-id` 时汇总全员今日数据；传入 `--user-id` 则查询指定销售的今日数据。
+- 其他角色不传 `--user-id` 时查询当前登录用户自己。
+- 返回今日总数量、已跟进、已通过、已绑定等关键指标。
+- 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
+
+## 今日代办明细
+
+```bash
+primecli wechat-touch daily-todo [--user-id <userId>] [--intent-level A|B|C|D] [--page <page>] [--size <size>]
+```
+
+- `--user-id`：按负责人筛选；不传则查询当前登录用户。
+- `--intent-level`：按意向等级 A/B/C/D 筛选。
+- `--page`：页码，默认 1。
+- `--size`：每页条数，默认 20。
+- 返回每条待办的群名称、公司名称、微信昵称、微信号、手机号、意向等级、备注和归属员工。群名称按 PrimeContact 前端命名规则自动拼接。
+- 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
+
 ## 群聊聊天内容
 
 ```bash
@@ -67,6 +106,16 @@ primecli wechat-touch chat --room-id <roomId> [--page <page>] [--size <size>]
 - `--page`：页码，默认 1。
 - `--size`：每页条数，默认 20。
 - 返回消息列表，包含发送人、发送时间、消息类型、消息内容。
+
+## 销售人员（归属员工）列表
+
+```bash
+primecli wechat-touch friend-owners [--name <name>]
+```
+
+- 需要 `SUPER_ADMIN` 或 `SALES_DIRECTOR`；当前用户不是这两个角色时不要调用。
+- `--name`：按姓名或用户名子串本地过滤，可用于根据销售名字查找对应的 `userId`。
+- 返回销售人员列表，包含 `userId`、`username`、`name`。
 
 ## 联系人分发
 
