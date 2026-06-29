@@ -7,7 +7,16 @@ CLI tool for AI Agents (OpenCode / Claude Code / HermesAgent / Codex) to interac
 ## Installation
 
 ```bash
+npx yujiewanwan/prime_cli install
+```
+
+This installs the `primecli` binary globally and registers the bundled agent skills.
+
+Manual fallback:
+
+```bash
 npm install -g yujiewanwan/prime_cli
+npx skills add yujiewanwan/prime_cli -y -g
 ```
 
 ## Uninstallation
@@ -18,10 +27,10 @@ npm uninstall -g primecli
 
 ## AI Agent Setup
 
-Install the agent skills so your AI agent knows how to use primecli:
+If you used the one-command installer above, the agent skills are already registered. To register or refresh them manually:
 
 ```bash
-npx skills add yujiewanwan/prime_cli
+npx skills add yujiewanwan/prime_cli -y -g
 ```
 
 This installs multiple domain-specific skills:

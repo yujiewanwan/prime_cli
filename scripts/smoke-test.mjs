@@ -32,6 +32,12 @@ const cases = [
     stdout: "create",
   },
   {
+    name: "install dry run",
+    args: ["install", "--dry-run"],
+    code: 0,
+    stdout: "npm install -g yujiewanwan/prime_cli\nnpx skills add yujiewanwan/prime_cli -y -g",
+  },
+  {
     name: "missing token",
     args: ["auth", "profile"],
     code: 1,

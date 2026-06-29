@@ -23,13 +23,14 @@ allowed-tools: Bash(primecli:*)
 
 ## 前置条件
 
-- `primecli` 需已安装：
+- 推荐使用一条命令安装 `primecli` 并注册 Agent Skills：
+  ```bash
+  npx yujiewanwan/prime_cli install
+  ```
+- 手动 fallback：
   ```bash
   npm install -g yujiewanwan/prime_cli
-  ```
-- 如果 Agent 尚未安装 skills：
-  ```bash
-  npx skills add yujiewanwan/prime_cli
+  npx skills add yujiewanwan/prime_cli -y -g
   ```
 - 默认 API Base URL 是 `https://primeapi.aizee.cc`。
 - API 地址优先级：`PRIMECLI_BASE_URL` > 配置文件 `baseUrl` > 默认地址。
