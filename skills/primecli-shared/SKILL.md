@@ -13,23 +13,24 @@ allowed-tools: Bash(primecli:*)
 使用 `primecli`：
 
 - 用户明确要求查询或操作 PrimeContact 中的数据。
-- 用户提到公司查询、企微触达、联系人分发、公众号文章、公众号登录态、热点创建等 PrimeContact 能力。
+- 用户提到公司查询、企微触达、联系人分发、公众号文章、公众号登录态、热点列表、热点详情、热点创建等 PrimeContact 能力。
 
 不要使用 `primecli`：
 
 - 用户只是做公开互联网调研、泛泛询问公司信息或行业热点。
 - 用户没有明确要求访问 PrimeContact 数据。
-- 用户请求的能力没有对应 `primecli` 命令；此时说明当前 CLI 暂不支持。
+- 用户请求的能力没有对应 CLI 命令或明确的后端只读 API；此时说明当前暂不支持。
 
 ## 前置条件
 
-- `primecli` 需已安装：
+- 推荐使用一条命令安装 `primecli` 并注册 Agent Skills：
+  ```bash
+  npx yujiewanwan/prime_cli install
+  ```
+- 手动 fallback：
   ```bash
   npm install -g yujiewanwan/prime_cli
-  ```
-- 如果 Agent 尚未安装 skills：
-  ```bash
-  npx skills add yujiewanwan/prime_cli
+  npx skills add yujiewanwan/prime_cli -y -g
   ```
 - 默认 API Base URL 是 `https://primeapi.aizee.cc`。
 - API 地址优先级：`PRIMECLI_BASE_URL` > 配置文件 `baseUrl` > 默认地址。

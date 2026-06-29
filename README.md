@@ -7,24 +7,19 @@ CLI tool for AI Agents (OpenCode / Claude Code / HermesAgent / Codex) to interac
 ## Installation
 
 ```bash
+npx yujiewanwan/prime_cli install
+```
+
+This installs the `primecli` binary globally and registers the bundled agent skills.
+
+Manual fallback:
+
+```bash
 npm install -g yujiewanwan/prime_cli
+npx skills add yujiewanwan/prime_cli -y -g
 ```
 
-## Uninstallation
-
-```bash
-npm uninstall -g primecli
-```
-
-## AI Agent Setup
-
-Install the agent skills so your AI agent knows how to use primecli:
-
-```bash
-npx skills add yujiewanwan/prime_cli
-```
-
-This installs multiple domain-specific skills:
+Installed agent skills:
 
 | Skill | Purpose |
 | ----- | ------- |
@@ -32,7 +27,13 @@ This installs multiple domain-specific skills:
 | `primecli-company` | PrimeContact company search |
 | `primecli-wechat-contact` | WeChat touch stats, follow-up items, group chat content, and contact distribution |
 | `primecli-wechat-official` | WeChat official account articles and credential updates |
-| `primecli-hot-topics` | Hot topic creation from JSON payloads |
+| `primecli-hot-topics` | Hot topic date/detail lookup and JSON payload creation |
+
+## Uninstallation
+
+```bash
+npm uninstall -g primecli
+```
 
 ## Quick Start
 
