@@ -11,6 +11,12 @@
 - **HTTP client**: [axios](https://www.npmjs.com/package/axios)
 - **Distribution**: npm / npx
 
+### Distribution Notes
+
+- 当前通过 GitHub 仓库直接分发：`npx yujiewanwan/prime_cli ...` 会拉取仓库源码。
+- `dist/` 是 TypeScript 编译产物，必须随源码一起提交到 GitHub，否则安装后的包缺少可执行文件。
+- 每次修改 `src/` 后，执行 `npm run build` 并提交更新后的 `dist/`。
+
 ### API
 
 - PrimeContact REST API，统一响应格式 `{ code, message, data, timestamp }`

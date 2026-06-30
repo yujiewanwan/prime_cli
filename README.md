@@ -124,3 +124,5 @@ npm test           # Build + smoke test
 npm run lint       # ESLint
 npm run format     # Prettier
 ```
+
+> **Note:** `dist/` is committed to GitHub because the package is installed directly from the repository. Run `npm run build` after any `src/` changes and commit the updated `dist/` files, otherwise users installing via `npx yujiewanwan/prime_cli` will get a broken or outdated binary.

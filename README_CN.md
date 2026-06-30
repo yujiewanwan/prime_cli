@@ -124,3 +124,5 @@ npm test           # 构建 + 冒烟测试
 npm run lint       # ESLint
 npm run format     # Prettier
 ```
+
+> **注意：** 因为当前包通过 GitHub 仓库直接分发，`dist/` 需要随源码一起提交到 GitHub。每次修改 `src/` 后，必须执行 `npm run build` 并提交更新后的 `dist/` 文件，否则通过 `npx yujiewanwan/prime_cli` 安装的用户会得到一个损坏或过期的二进制文件。
