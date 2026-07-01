@@ -75,6 +75,7 @@ Options: `--page <page>` (default 1), `--size <size>` (default 10)
 | `primecli wechat-touch distribution-users`            | List users available for contact distribution. `SUPER_ADMIN` only |
 | `primecli wechat-touch distribute -u <id> -c <count>` | Distribute contacts to a user. `SUPER_ADMIN` only                 |
 | `primecli wechat-touch items`                         | List follow-up items, including bound group chat IDs              |
+| `primecli wechat-touch item <id>`                     | Get a single follow-up item by ID                                 |
 | `primecli wechat-touch chat --room-id <id>`           | Get group chat content by room ID. `SUPER_ADMIN` only             |
 
 Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)

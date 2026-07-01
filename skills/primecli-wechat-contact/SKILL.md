@@ -16,6 +16,7 @@ allowed-tools: Bash(primecli:*)
 | --- | --- |
 | 查看企微触达统计 | `primecli wechat-touch stats [--user-id <userId>]` |
 | 查看触达跟进列表 | `primecli wechat-touch items [--date <date>] [--user-id <userId>] [--phone <phone>] [--wechat-id <wechatId>] [--wechat-nickname <nickname>] [--friend-accepted\|--no-friend-accepted] [--wechat-exists <0\|1\|2>] [--group-bound\|--no-group-bound] [--page <page>] [--size <size>]` |
+| 按 ID 查询触达跟进详情 | `primecli wechat-touch item <id>` |
 | 查看今日代办意向统计 | `primecli wechat-touch daily-todo-summary` |
 | 查看今日代办明细 | `primecli wechat-touch daily-todo` |
 | 查看今日触达跟进统计 | `primecli wechat-touch today-stats` |
@@ -52,6 +53,15 @@ primecli wechat-touch items [--date <yyyy-MM-dd>] [--user-id <userId>] [--phone 
 - `--size`：每页条数，默认 50。
 - 返回记录包含 `roomId`、`groupBound` 等字段，可用于后续查询群聊内容。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
+
+## 触达跟进详情
+
+```bash
+primecli wechat-touch item <id>
+```
+
+- `<id>`：触达跟进记录 ID，必填。
+- 普通已登录用户即可调用，最终权限由后端校验。
 
 ## 今日代办意向统计
 

@@ -75,6 +75,7 @@ primecli auth profile
 | `primecli wechat-touch distribution-users`            | 查询可分发人员列表，仅 `SUPER_ADMIN`         |
 | `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户，仅 `SUPER_ADMIN`       |
 | `primecli wechat-touch items`                         | 查询触达跟进列表，包含已绑定群聊 ID          |
+| `primecli wechat-touch item <id>`                     | 按 ID 查询单条触达跟进详情                   |
 | `primecli wechat-touch chat --room-id <id>`           | 按 roomId 查询群聊聊天内容，仅 `SUPER_ADMIN` |
 
 团队汇总参数：`--start-date <日期>`，`--end-date <日期>`（默认均为当天）

@@ -253,6 +253,18 @@ export function registerWechatTouchCommands(program) {
         console.log(JSON.stringify(data, null, 2));
     });
     wechatTouch
+        .command("item <id>")
+        .description("Get a wechat touch item by ID")
+        .action(async (id) => {
+        const config = await readConfig();
+        if (!config.token) {
+            throw new Error("No saved token. Run `primecli auth login` first.");
+        }
+        const client = createApiClient(config);
+        const data = await client.get(`/api/wechat-touch/items/${id}`);
+        console.log(JSON.stringify(data, null, 2));
+    });
+    wechatTouch
         .command("chat")
         .description("Get group chat content by roomId")
         .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
