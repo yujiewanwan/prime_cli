@@ -21,13 +21,14 @@ npx skills add yujiewanwan/prime_cli -y -g
 
 Installed agent skills:
 
-| Skill | Purpose |
-| ----- | ------- |
-| `primecli-shared` | Shared setup, login, base URL, role access control, and safety rules |
-| `primecli-company` | PrimeContact company search |
-| `primecli-wechat-contact` | WeChat touch stats, follow-up items, group chat content, and contact distribution |
-| `primecli-wechat-official` | WeChat official account articles and credential updates |
-| `primecli-hot-topics` | Hot topic date/detail lookup and JSON payload creation |
+| Skill                          | Purpose                                                                           |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| `primecli-shared`              | Shared setup, login, base URL, role access control, and safety rules              |
+| `primecli-company`             | PrimeContact company search                                                       |
+| `primecli-wechat-contact`      | WeChat touch stats, follow-up items, group chat content, and contact distribution |
+| `primecli-wechat-official`     | WeChat official account articles and credential updates                           |
+| `primecli-wecom-conversations` | Agent WeCom conversation analysis queue, context, and result updates              |
+| `primecli-hot-topics`          | Hot topic date/detail lookup and JSON payload creation                            |
 
 ## Uninstallation
 
@@ -94,6 +95,17 @@ Accounts options: `--tag <tag>` (default `hot`)
 By-fakeid options: `--fakeids <fakeids>` (required, comma-separated), `--date <date>` (default today), `--start-time <timestamp>`, `--end-time <timestamp>`
 Credentials update options: `--id <id>` (required), `--token <token>` (required), `--cookie <cookie>` (required), `--dry-run`
 
+### WeCom Conversations
+
+| Command                                                                                | Description                                                       |
+| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `primecli wecom-conversations pending`                                                 | List pending conversations for agent analysis. `SUPER_ADMIN` only |
+| `primecli wecom-conversations context --conversation-id <id>`                          | Get analysis context for a conversation. `SUPER_ADMIN` only       |
+| `primecli wecom-conversations result --conversation-id <id> --last-analyzed-seq <seq>` | Update conversation analysis result. `SUPER_ADMIN` only           |
+
+Pending options: `--conversation-type <ROOM|SINGLE>`, `--limit <limit>` (1-200)
+Result options: `--rolling-summary <text>`, `--analysis-result-json <path>`, `--analysis-status <PENDING|SUCCESS|FAILED|SKIPPED>`
+
 ### Hot Topics
 
 | Command                      | Description                            |
@@ -113,7 +125,7 @@ Create options: `--json <path>` (required), `--dry-run` (print the request witho
 - Commands without an explicit role requirement are allowed for any logged-in user; backend authorization remains the final guard.
 - Commands that call role-restricted backend APIs must declare the required role in the CLI with `requireRole(...)`.
 - When adding a new role-restricted command, update the README and agent skill docs with the required role.
-- `SUPER_ADMIN` only commands today: `wechat-touch chat`, `wechat-touch distribute`, `wechat-touch distribution-users`, `wechat-official articles fetch`, and `wechat-official credentials update`.
+- `SUPER_ADMIN` only commands today: `wechat-touch chat`, `wechat-touch distribute`, `wechat-touch distribution-users`, `wechat-official articles fetch`, `wechat-official credentials update`, and all `wecom-conversations` commands.
 
 ## Development
 

@@ -21,13 +21,14 @@ npx skills add yujiewanwan/prime_cli -y -g
 
 安装后会注册以下 Agent Skills：
 
-| Skill | 用途 |
-| ----- | ---- |
-| `primecli-shared` | 通用安装、登录、API 地址、角色权限和安全规则 |
-| `primecli-company` | PrimeContact 公司查询 |
-| `primecli-wechat-contact` | 企微触达统计、跟进列表、群聊内容和联系人分发 |
-| `primecli-wechat-official` | 微信公众号文章和登录态更新 |
-| `primecli-hot-topics` | 查询热点日期/详情，以及从 JSON payload 创建热点 |
+| Skill                          | 用途                                            |
+| ------------------------------ | ----------------------------------------------- |
+| `primecli-shared`              | 通用安装、登录、API 地址、角色权限和安全规则    |
+| `primecli-company`             | PrimeContact 公司查询                           |
+| `primecli-wechat-contact`      | 企微触达统计、跟进列表、群聊内容和联系人分发    |
+| `primecli-wechat-official`     | 微信公众号文章和登录态更新                      |
+| `primecli-wecom-conversations` | Agent 企微会话分析队列、上下文和结果回写        |
+| `primecli-hot-topics`          | 查询热点日期/详情，以及从 JSON payload 创建热点 |
 
 ## 卸载
 
@@ -94,6 +95,17 @@ primecli auth profile
 按 fakeid 查询参数：`--fakeids <fakeids>`（必填，逗号分隔），`--date <日期>`（默认当天），`--start-time <时间戳>`，`--end-time <时间戳>`
 登录态更新参数：`--id <id>`（必填），`--token <token>`（必填），`--cookie <cookie>`（必填），`--dry-run`
 
+### 企微会话分析
+
+| 命令                                                                                   | 说明                                          |
+| -------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `primecli wecom-conversations pending`                                                 | 查询待 Agent 分析的会话列表，仅 `SUPER_ADMIN` |
+| `primecli wecom-conversations context --conversation-id <id>`                          | 查询指定会话的分析上下文，仅 `SUPER_ADMIN`    |
+| `primecli wecom-conversations result --conversation-id <id> --last-analyzed-seq <seq>` | 更新指定会话的分析结果，仅 `SUPER_ADMIN`      |
+
+待分析列表参数：`--conversation-type <ROOM|SINGLE>`，`--limit <limit>`（1-200）
+结果回写参数：`--rolling-summary <text>`，`--analysis-result-json <path>`，`--analysis-status <PENDING|SUCCESS|FAILED|SKIPPED>`
+
 ### 热点
 
 | 命令                         | 说明                       |
@@ -113,7 +125,7 @@ primecli auth profile
 - 未显式声明角色要求的命令，默认允许已登录用户发起请求；最终权限仍以后端校验为准。
 - 调用后端角色受限接口的命令，必须在 CLI 侧通过 `requireRole(...)` 声明所需角色。
 - 后续新增角色受限命令时，必须同步更新 README 和 Agent Skill 文档中的权限说明。
-- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-touch chat`、`wechat-touch distribute`、`wechat-touch distribution-users`、`wechat-official articles fetch`、`wechat-official credentials update`。
+- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-touch chat`、`wechat-touch distribute`、`wechat-touch distribution-users`、`wechat-official articles fetch`、`wechat-official credentials update`，以及所有 `wecom-conversations` 命令。
 
 ## 开发
 
