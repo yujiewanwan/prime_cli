@@ -26,6 +26,12 @@ const cases = [
     stdout: "by-fakeid",
   },
   {
+    name: "wecom-conversations help",
+    args: ["wecom-conversations", "--help"],
+    code: 0,
+    stdout: "pending",
+  },
+  {
     name: "hot-topics help",
     args: ["hot-topics", "--help"],
     code: 0,
@@ -35,7 +41,8 @@ const cases = [
     name: "install dry run",
     args: ["install", "--dry-run"],
     code: 0,
-    stdout: "npm install -g yujiewanwan/prime_cli\nnpx skills add yujiewanwan/prime_cli -y -g",
+    stdout:
+      "npm install -g yujiewanwan/prime_cli\nnpx skills add yujiewanwan/prime_cli -y -g",
   },
   {
     name: "missing token",
@@ -48,6 +55,27 @@ const cases = [
     args: ["wechat-touch", "distribute", "--user-id", "1", "--count", "0"],
     code: 1,
     stderr: "Count must be at least 1.",
+  },
+  {
+    name: "invalid conversation type",
+    args: ["wecom-conversations", "pending", "--conversation-type", "GROUP"],
+    code: 1,
+    stderr: "Conversation type must be one of ROOM, SINGLE.",
+  },
+  {
+    name: "invalid analysis status",
+    args: [
+      "wecom-conversations",
+      "result",
+      "--conversation-id",
+      "1",
+      "--last-analyzed-seq",
+      "10",
+      "--analysis-status",
+      "DONE",
+    ],
+    code: 1,
+    stderr: "Analysis status must be one of PENDING, SUCCESS, FAILED, SKIPPED.",
   },
   {
     name: "invalid date",

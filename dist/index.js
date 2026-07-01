@@ -6,6 +6,7 @@ import { registerCompanyCommands } from "./commands/company.js";
 import { registerHermesCommands } from "./commands/hermes.js";
 import { registerHotTopicsCommands } from "./commands/hot-topics.js";
 import { registerInstallCommand } from "./commands/install.js";
+import { registerWecomConversationsCommands } from "./commands/wecom-conversations.js";
 import { registerWechatOfficialCommands } from "./commands/wechat-official.js";
 import { registerWechatTouchCommands } from "./commands/wechat-touch.js";
 const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
@@ -19,6 +20,7 @@ registerCompanyCommands(program);
 registerHermesCommands(program);
 registerHotTopicsCommands(program);
 registerInstallCommand(program);
+registerWecomConversationsCommands(program);
 registerWechatOfficialCommands(program);
 registerWechatTouchCommands(program);
 program.parseAsync(process.argv).catch((error) => {

@@ -73,6 +73,7 @@ primecli auth profile
 - `primecli wechat-touch distribution-users`
 - `primecli wechat-official articles fetch`
 - `primecli wechat-official credentials update`
+- 所有 `primecli wecom-conversations` 命令
 
 ## 常见问题
 
