@@ -115,6 +115,14 @@ primecli auth profile
 
 热点创建参数：`--json <文件路径>`（必填），`--dry-run`（只输出请求，不写入后端）
 
+### 文生图
+
+| 命令                                                | 说明                 |
+| --------------------------------------------------- | -------------------- |
+| `primecli image-generations create --prompt <文本>` | 根据 prompt 生成图片 |
+
+文生图参数：`--prompt <文本>`（必填），`--dry-run`（只输出请求，不调用后端）
+
 ## 配置
 
 - Token、当前用户角色和可选的 `baseUrl` 保存在 `~/.config/primecli/config.json`

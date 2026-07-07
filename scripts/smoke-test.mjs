@@ -38,6 +38,12 @@ const cases = [
     stdout: "create",
   },
   {
+    name: "image-generations help",
+    args: ["image-generations", "--help"],
+    code: 0,
+    stdout: "create",
+  },
+  {
     name: "install dry run",
     args: ["install", "--dry-run"],
     code: 0,
@@ -96,6 +102,12 @@ const cases = [
     ],
     code: 1,
     stderr: "Start time must be a Unix timestamp.",
+  },
+  {
+    name: "blank image prompt",
+    args: ["image-generations", "create", "--prompt", "   ", "--dry-run"],
+    code: 1,
+    stderr: "Prompt must not be blank.",
   },
 ];
 
