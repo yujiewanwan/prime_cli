@@ -29,6 +29,7 @@ npx skills add yujiewanwan/prime_cli -y -g
 | `primecli-wechat-official`     | 微信公众号文章和登录态更新                      |
 | `primecli-wecom-conversations` | Agent 企微会话分析队列、上下文和结果回写        |
 | `primecli-hot-topics`          | 查询热点日期/详情，以及从 JSON payload 创建热点 |
+| `primecli-image-generations`   | 通过 PrimeContact 根据 prompt 生成图片          |
 
 ## 卸载
 

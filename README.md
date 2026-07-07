@@ -29,6 +29,7 @@ Installed agent skills:
 | `primecli-wechat-official`     | WeChat official account articles and credential updates                           |
 | `primecli-wecom-conversations` | Agent WeCom conversation analysis queue, context, and result updates              |
 | `primecli-hot-topics`          | Hot topic date/detail lookup and JSON payload creation                            |
+| `primecli-image-generations`   | Authenticated PrimeContact image generation from prompts                          |
 
 ## Uninstallation
 
