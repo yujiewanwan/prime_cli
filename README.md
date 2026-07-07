@@ -28,6 +28,7 @@ Installed agent skills:
 | `primecli-wechat-contact` | WeChat touch stats, follow-up items, group chat content, and contact distribution |
 | `primecli-wechat-official` | WeChat official account articles and credential updates |
 | `primecli-hot-topics` | Hot topic date/detail lookup and JSON payload creation |
+| `primecli-image-generations` | Authenticated PrimeContact image generation from prompts |
 
 ## Uninstallation
 
