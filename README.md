@@ -102,6 +102,14 @@ Credentials update options: `--id <id>` (required), `--token <token>` (required)
 
 Create options: `--json <path>` (required), `--dry-run` (print the request without writing to the backend)
 
+### Image Generations
+
+| Command                                             | Description                     |
+| --------------------------------------------------- | ------------------------------- |
+| `primecli image-generations create --prompt <text>` | Generate an image from a prompt |
+
+Create options: `--prompt <text>` (required), `--dry-run` (print the request without calling the API)
+
 ## Configuration
 
 - Token, current user role, and optional `baseUrl` stored at `~/.config/primecli/config.json`
