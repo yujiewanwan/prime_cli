@@ -24,13 +24,14 @@ allowed-tools: Bash(primecli:*)
 ## 命令
 
 ```bash
-primecli image-generations create --prompt <prompt> [--dry-run]
+primecli image-generations create --prompt <prompt> [--reference-image <path>] [--dry-run]
 ```
 
 - `--prompt` 必填，不能为空白。
+- `--reference-image` 可选；提供本地图片路径时，命令以 multipart 请求调用 `POST /api/image-generations/edits`。
 - 这是写操作，且成功生成会消耗当日额度；优先使用 `--dry-run` 检查请求。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
-- 命令会调用 `POST /api/image-generations`，body 为：
+- 未提供参考图时，命令调用 `POST /api/image-generations`，body 为：
 
 ```json
 {
@@ -39,6 +40,8 @@ primecli image-generations create --prompt <prompt> [--dry-run]
 ```
 
 调用方不要传模型、尺寸、batch size、推理步数或 guidance scale；这些参数由后端固定。
+
+提供参考图时，命令读取本地文件并以 `referenceImage` multipart 文件字段提交；文件不存在或为空时不会发起网络请求。
 
 ## 输出处理
 

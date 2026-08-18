@@ -12,6 +12,7 @@ export function createApiClient(options = {}) {
     return {
         get: async (path) => unwrap(instance.get(path)),
         post: async (path, body) => unwrap(instance.post(path, body)),
+        postForm: async (path, body) => unwrap(instance.post(path, body)),
         put: async (path, body) => unwrap(instance.put(path, body)),
     };
 }

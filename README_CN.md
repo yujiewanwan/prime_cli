@@ -120,9 +120,9 @@ primecli auth profile
 
 | 命令                                                | 说明                 |
 | --------------------------------------------------- | -------------------- |
-| `primecli image-generations create --prompt <文本>` | 根据 prompt 生成图片 |
+| `primecli image-generations create --prompt <文本> [--reference-image <路径>]` | 根据 prompt 或参考图生成图片 |
 
-文生图参数：`--prompt <文本>`（必填），`--dry-run`（只输出请求，不调用后端）
+文生图参数：`--prompt <文本>`（必填）、`--reference-image <路径>`（可选本地参考图）、`--dry-run`（只输出请求，不调用后端）
 
 ## 配置
 
