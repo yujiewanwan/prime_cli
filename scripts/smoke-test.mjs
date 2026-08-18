@@ -109,6 +109,18 @@ const cases = [
     code: 1,
     stderr: "Prompt must not be blank.",
   },
+  {
+    name: "missing reference image",
+    args: ["image-generations", "create", "--prompt", "circle", "--reference-image", "missing.png"],
+    code: 1,
+    stderr: "Reference image file does not exist: missing.png",
+  },
+  {
+    name: "reference image dry run",
+    args: ["image-generations", "create", "--prompt", "circle", "--reference-image", "reference.png", "--dry-run"],
+    code: 0,
+    stdout: '"path": "/api/image-generations/edits"',
+  },
 ];
 
 const homeDir = await mkdtemp(join(tmpdir(), "primecli-smoke-"));

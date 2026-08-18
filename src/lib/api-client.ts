@@ -13,6 +13,7 @@ export type BaseResponse<T> = {
 export type ApiClient = {
   get<T>(path: string): Promise<T>;
   post<T>(path: string, body?: unknown): Promise<T>;
+  postForm<T>(path: string, body: FormData): Promise<T>;
   put<T>(path: string, body: unknown): Promise<T>;
 };
 
@@ -34,6 +35,8 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
   return {
     get: async <T>(path: string) => unwrap<T>(instance.get(path)),
     post: async <T>(path: string, body?: unknown) =>
+      unwrap<T>(instance.post(path, body)),
+    postForm: async <T>(path: string, body: FormData) =>
       unwrap<T>(instance.post(path, body)),
     put: async <T>(path: string, body: unknown) =>
       unwrap<T>(instance.put(path, body)),

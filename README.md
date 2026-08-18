@@ -120,9 +120,9 @@ Create options: `--json <path>` (required), `--dry-run` (print the request witho
 
 | Command                                             | Description                     |
 | --------------------------------------------------- | ------------------------------- |
-| `primecli image-generations create --prompt <text>` | Generate an image from a prompt |
+| `primecli image-generations create --prompt <text> [--reference-image <path>]` | Generate an image from a prompt or reference image |
 
-Create options: `--prompt <text>` (required), `--dry-run` (print the request without calling the API)
+Create options: `--prompt <text>` (required), `--reference-image <path>` (optional local reference image), `--dry-run` (print the request without calling the API)
 
 ## Configuration
 
