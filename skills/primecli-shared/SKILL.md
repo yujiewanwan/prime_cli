@@ -68,7 +68,6 @@ primecli auth profile
 
 当前 `SUPER_ADMIN` 专属命令：
 
-- `primecli wechat-touch chat`
 - `primecli wechat-touch distribute`
 - `primecli wechat-touch distribution-users`
 - `primecli wechat-official articles fetch`

@@ -1,6 +1,6 @@
 ---
 name: primecli-wechat-contact
-description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, daily todos, group chat content by roomId, distribution user lists, and contact distribution. Use when the user mentions 企微触达, 触达统计, 触达跟进, 今日代办, 群聊记录, 分发联系人, or 下发线索.
+description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, daily todos, distribution user lists, and contact distribution. Use when the user mentions 企微触达, 触达统计, 触达跟进, 今日代办, 分发联系人, or 下发线索.
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -20,7 +20,6 @@ allowed-tools: Bash(primecli:*)
 | 查看今日代办意向统计 | `primecli wechat-touch daily-todo-summary` |
 | 查看今日代办明细 | `primecli wechat-touch daily-todo` |
 | 查看今日触达跟进统计 | `primecli wechat-touch today-stats` |
-| 根据 roomId 查看群聊内容 | `primecli wechat-touch chat --room-id <roomId>` |
 | 查看销售人员（归属员工）列表 | `primecli wechat-touch friend-owners` |
 | 查看可分发人员 | `primecli wechat-touch distribution-users` |
 | 分发联系人 | `primecli wechat-touch distribute -u <userId> -c <count>` |
@@ -51,7 +50,7 @@ primecli wechat-touch items [--date <yyyy-MM-dd>] [--user-id <userId>] [--phone 
 - `--group-bound` / `--no-group-bound`：只看已绑定 / 未绑定群聊的记录。
 - `--page`：页码，默认 1。
 - `--size`：每页条数，默认 50。
-- 返回记录包含 `roomId`、`groupBound` 等字段，可用于后续查询群聊内容。
+- 返回记录包含 `roomId`、`groupBound` 等字段。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
 
 ## 触达跟进详情
@@ -98,18 +97,6 @@ primecli wechat-touch daily-todo [--user-id <userId>] [--intent-level A|B|C|D] [
 - 返回每条待办的群名称、公司名称、微信昵称、微信号、手机号、意向等级、备注和归属员工。群名称按 PrimeContact 前端命名规则自动拼接。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
 
-## 群聊聊天内容
-
-```bash
-primecli wechat-touch chat --room-id <roomId> [--page <page>] [--size <size>]
-```
-
-- 需要 `SUPER_ADMIN`；当前用户不是 `SUPER_ADMIN` 时不要调用。
-- `--room-id`：群聊 roomId，必填。
-- `--page`：页码，默认 1。
-- `--size`：每页条数，默认 20。
-- 返回消息列表，包含发送人、发送时间、消息类型、消息内容。
-
 ## 销售人员（归属员工）列表
 
 ```bash
@@ -138,5 +125,4 @@ primecli wechat-touch distribute -u <userId> -c <count>
 
 - 命令返回 JSON。
 - 汇报统计类结果时优先展示关键计数和比率。
-- 汇报列表类结果时优先展示分页、负责人、公司或线索标识、`roomId` 和 `groupBound`。
-- 群聊消息可能包含敏感业务信息，除非用户要求，不要大段原文转述。
+- 汇报列表类结果时优先展示分页、负责人、公司或线索标识和 `groupBound`。
