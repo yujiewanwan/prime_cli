@@ -4,7 +4,6 @@ import { Command } from "commander";
 import { readFileSync } from "node:fs";
 import { registerAuthCommands } from "./commands/auth.js";
 import { registerCompanyCommands } from "./commands/company.js";
-import { registerHermesCommands } from "./commands/hermes.js";
 import { registerHotTopicsCommands } from "./commands/hot-topics.js";
 import { registerImageGenerationsCommands } from "./commands/image-generations.js";
 import { registerInstallCommand } from "./commands/install.js";
@@ -29,7 +28,6 @@ program
 
 registerAuthCommands(program);
 registerCompanyCommands(program);
-registerHermesCommands(program);
 registerHotTopicsCommands(program);
 registerImageGenerationsCommands(program);
 registerInstallCommand(program);

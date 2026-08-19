@@ -26,12 +26,6 @@ type ItemsOptions = {
   size?: string;
 };
 
-type ChatOptions = {
-  roomId: string;
-  page?: string;
-  size?: string;
-};
-
 type DailyTodoSummaryOptions = {
   userId?: string;
 };
@@ -400,30 +394,4 @@ export function registerWechatTouchCommands(program: Command): void {
       console.log(JSON.stringify(data, null, 2));
     });
 
-  wechatTouch
-    .command("chat")
-    .description("Get group chat content by roomId")
-    .requiredOption("--room-id <roomId>", "Room ID of the bound group chat")
-    .option("--page <page>", "Page number", "1")
-    .option("--size <size>", "Page size", "20")
-    .hook("preAction", requireRole("SUPER_ADMIN"))
-    .action(async (options: ChatOptions) => {
-      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
-      const size = parseIntegerOption(options.size, "Size", 20, { min: 1 });
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const params = new URLSearchParams();
-      params.set("page", String(page));
-      params.set("size", String(size));
-
-      const client = createApiClient(config);
-      const data = await client.get(
-        `/api/wechat-touch/rooms/${options.roomId}/messages?${params.toString()}`,
-      );
-      console.log(JSON.stringify(data, null, 2));
-    });
 }

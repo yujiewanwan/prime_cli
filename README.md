@@ -25,7 +25,7 @@ Installed agent skills:
 | ------------------------------ | --------------------------------------------------------------------------------- |
 | `primecli-shared`              | Shared setup, login, base URL, role access control, and safety rules              |
 | `primecli-company`             | PrimeContact company search                                                       |
-| `primecli-wechat-contact`      | WeChat touch stats, follow-up items, group chat content, and contact distribution |
+| `primecli-wechat-contact`      | WeChat touch stats, follow-up items, and contact distribution                      |
 | `primecli-wechat-official`     | WeChat official account articles and credential updates                           |
 | `primecli-wecom-conversations` | Agent WeCom conversation analysis queue, context, and result updates              |
 | `primecli-hot-topics`          | Hot topic date/detail lookup and JSON payload creation                            |
@@ -77,12 +77,10 @@ Options: `--page <page>` (default 1), `--size <size>` (default 10)
 | `primecli wechat-touch distribute -u <id> -c <count>` | Distribute contacts to a user. `SUPER_ADMIN` only                 |
 | `primecli wechat-touch items`                         | List follow-up items, including bound group chat IDs              |
 | `primecli wechat-touch item <id>`                     | Get a single follow-up item by ID                                 |
-| `primecli wechat-touch chat --room-id <id>`           | Get group chat content by room ID. `SUPER_ADMIN` only             |
 
 Team summary options: `--start-date <date>`, `--end-date <date>` (both default to today)
 Distribute options: `-u, --user-id <id>` (required), `-c, --count <count>` (required, 1-150)
 Items options: `--date <date>`, `--user-id <userId>`, `--group-bound`, `--no-group-bound`, `--page <page>` (default 1), `--size <size>` (default 50)
-Chat options: `--room-id <id>` (required), `--page <page>` (default 1), `--size <size>` (default 20)
 
 ### WeChat Official Account
 
@@ -135,7 +133,7 @@ Create options: `--prompt <text>` (required), `--reference-image <path>` (option
 - Commands without an explicit role requirement are allowed for any logged-in user; backend authorization remains the final guard.
 - Commands that call role-restricted backend APIs must declare the required role in the CLI with `requireRole(...)`.
 - When adding a new role-restricted command, update the README and agent skill docs with the required role.
-- `SUPER_ADMIN` only commands today: `wechat-touch chat`, `wechat-touch distribute`, `wechat-touch distribution-users`, `wechat-official articles fetch`, `wechat-official credentials update`, and all `wecom-conversations` commands.
+- `SUPER_ADMIN` only commands today: `wechat-touch distribute`, `wechat-touch distribution-users`, `wechat-official articles fetch`, `wechat-official credentials update`, and all `wecom-conversations` commands.
 
 ## Development
 
