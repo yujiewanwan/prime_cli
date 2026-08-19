@@ -26,11 +26,6 @@ try {
   ]);
   await runJson("auth profile", ["auth", "profile"]);
   await runJson("company search", ["company", "search", "--name", "test"]);
-  await runJson("Hermes prompt", [
-    "hermes",
-    "prompt",
-    "SUPER_INTERN_MORNING_TASKS",
-  ]);
   await runJson("wechat touch stats", ["wechat-touch", "stats"]);
   await runJson("wechat touch daily todo summary", [
     "wechat-touch",
@@ -62,10 +57,16 @@ try {
     "articles",
     "accounts",
   ]);
+  const pendingConversations = await runJson("pending WeCom conversations", [
+    "wecom-conversations",
+    "pending",
+    "--limit",
+    "1",
+  ]);
   await runDependentQuery(
-    "wechat touch chat",
-    findValue(items, ["roomId", "groupChatId"]),
-    (roomId) => ["wechat-touch", "chat", "--room-id", String(roomId)],
+    "wechat touch item",
+    findValue(items, ["id", "itemId"]),
+    (id) => ["wechat-touch", "item", String(id)],
   );
   await runDependentQuery(
     "wechat official articles by fakeid",
@@ -77,6 +78,11 @@ try {
       "--fakeids",
       String(fakeid),
     ],
+  );
+  await runDependentQuery(
+    "WeCom conversation context",
+    findValue(pendingConversations, ["conversationId", "id"]),
+    (id) => ["wecom-conversations", "context", "--conversation-id", String(id)],
   );
 } finally {
   await rm(homeDir, { force: true, recursive: true });
