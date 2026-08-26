@@ -1,0 +1,29 @@
+name: pr-quality
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  pr-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: |
+          git fetch origin "$GITHUB_BASE_REF"
+          git log --format=%s "origin/$GITHUB_BASE_REF..HEAD" > "$RUNNER_TEMP/pr-commits.txt"
+          node scripts/github-delivery-gate.mjs pull-request "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/pr-commits.txt" --fail-on-error
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
