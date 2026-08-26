@@ -7,7 +7,7 @@ export function createApiClient(options = {}) {
         headers: options.token
             ? { Authorization: `Bearer ${options.token}` }
             : undefined,
-        timeout: DEFAULT_TIMEOUT_MS,
+        timeout: options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
     });
     return {
         get: async (path) => unwrap(instance.get(path)),

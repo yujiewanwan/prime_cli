@@ -145,4 +145,22 @@ npm run lint       # ESLint
 npm run format     # Prettier
 ```
 
+### 真实 API 查询验证
+
+`test:e2e` 使用临时 HOME 登录 PrimeContact，并验证所有只读命令。测试账号默认为 `test`，密码必须通过环境变量提供：
+
+```bash
+PRIMECLI_E2E_PASSWORD='<测试账号密码>' npm run test:e2e
+```
+
+可使用 `PRIMECLI_E2E_USERNAME` 覆盖测试账号，使用 `PRIMECLI_BASE_URL` 覆盖 API 地址。此测试不执行写操作。
+
+生图使用独立命令，并将生图请求超时设为 180 秒：
+
+```bash
+PRIMECLI_E2E_PASSWORD='<测试账号密码>' \
+PRIMECLI_E2E_REFERENCE_IMAGE='/绝对路径/参考图.png' \
+npm run test:e2e:image
+```
+
 > **注意：** 因为当前包通过 GitHub 仓库直接分发，`dist/` 需要随源码一起提交到 GitHub。每次修改 `src/` 后，必须执行 `npm run build` 并提交更新后的 `dist/` 文件，否则通过 `npx yujiewanwan/prime_cli` 安装的用户会得到一个损坏或过期的二进制文件。

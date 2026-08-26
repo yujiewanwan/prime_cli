@@ -10,6 +10,8 @@ type CreateOptions = {
   dryRun?: boolean;
 };
 
+const IMAGE_GENERATION_TIMEOUT_MS = 180_000;
+
 export function registerImageGenerationsCommands(program: Command): void {
   const imageGenerations = program
     .command("image-generations")
@@ -48,7 +50,10 @@ export function registerImageGenerationsCommands(program: Command): void {
         throw new Error("No saved token. Run `primecli auth login` first.");
       }
 
-      const client = createApiClient(config);
+      const client = createApiClient({
+        ...config,
+        timeoutMs: IMAGE_GENERATION_TIMEOUT_MS,
+      });
       const data = form
         ? await client.postForm(path, form)
         : await client.post(path, body);

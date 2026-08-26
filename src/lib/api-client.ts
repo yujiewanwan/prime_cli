@@ -20,6 +20,7 @@ export type ApiClient = {
 export type ApiClientOptions = {
   token?: string;
   baseUrl?: string;
+  timeoutMs?: number;
 };
 
 export function createApiClient(options: ApiClientOptions = {}): ApiClient {
@@ -29,7 +30,7 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
     headers: options.token
       ? { Authorization: `Bearer ${options.token}` }
       : undefined,
-    timeout: DEFAULT_TIMEOUT_MS,
+    timeout: options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
   });
 
   return {

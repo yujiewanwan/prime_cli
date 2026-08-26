@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { createApiClient } from "../lib/api-client.js";
 import { readConfig } from "../lib/config.js";
+const IMAGE_GENERATION_TIMEOUT_MS = 180_000;
 export function registerImageGenerationsCommands(program) {
     const imageGenerations = program
         .command("image-generations")
@@ -35,7 +36,10 @@ export function registerImageGenerationsCommands(program) {
         if (!config.token) {
             throw new Error("No saved token. Run `primecli auth login` first.");
         }
-        const client = createApiClient(config);
+        const client = createApiClient({
+            ...config,
+            timeoutMs: IMAGE_GENERATION_TIMEOUT_MS,
+        });
         const data = form
             ? await client.postForm(path, form)
             : await client.post(path, body);
