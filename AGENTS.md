@@ -1,5 +1,9 @@
 # AGENTS.md
 
+## 需求中心交付契约
+
+所有需求中心下发的任务先遵循 [.github/DELIVERY_WORKFLOW.md](.github/DELIVERY_WORKFLOW.md)：澄清需求 → 待开发 → 开发中 → 待合并 → 已完成。该文件定义任务接收、状态与父需求回写、并行和 PR 追溯；以下产品工程约束继续适用。用户在本项目指定或要求处理待开发交付时，按契约直接推进，不重新建立 Issue 或增加人工确认阶段。
+
 ## Project
 
 `primecli` — CLI 程序，供 Agent（OpenCode / Claude Code / HermesAgent / Codex 等）与 PrimeContact 系统交互。
@@ -43,45 +47,14 @@
   - `primecli wechat-official articles fetch`
   - `primecli wechat-official credentials update`
 
-> Build, test, lint commands TBD — add after tooling is set up.
+构建与验证命令见下方“开发与验证”。
 
-## Development Workflow
+## 开发与验证
 
-### 1. Requirement Intake
-
-- Communicate requirements with the user.
-- Clarify assumptions, scope, and acceptance criteria.
-- Create a GitHub Issue that captures the agreed requirement.
-- Wait for the development window before starting implementation.
-
-### 2. Development Window
-
-- When the development window opens, create an isolated worktree from `master`:
-
-```bash
-git worktree add -b issue/<id>-<slug> .worktree/<id>-<slug> master
-cd .worktree/<id>-<slug>
-```
-
-- Do all implementation work inside that worktree.
-
-### 3. Feature Design Doc
-
-- Before coding, write `docs/feature/ISSUE-<id>-<slug>.md`.
-- Write feature docs in Chinese unless the user explicitly requests another language.
-- The feature doc must describe the confirmed requirement, scope, approach, and verification plan.
-- Start coding only after the feature doc has passed human review.
-
-### 4. Pull Request
-
-- Submit a PR for the issue.
-- Include `Closes #<id>` in the PR description.
-- If the PR has not been merged, address follow-up work with additional commits on the same PR.
-- If the PR has already been merged, open a new PR for further changes.
-
-### 5. Cleanup
-
-- After the PR is merged, clean up the corresponding worktree.
+- 默认分支为 `main`。先 fetch 最新远端基线，从 `origin/main` 创建 `issue/<id>-<slug>` 分支及独立 worktree。
+- 在 worktree 中记录必要 Feature 文档、实现和验证；无需开发窗口或文档人工审核。
+- 验证命令：`npm run lint`、`npm test`、`npm run build`；修改 `src/` 时提交对应 `dist/`。
+- PR、合并与状态回写统一遵循交付契约。使用英文 Conventional Commits，Issue、PR 和需求文档使用中文。
 
 ## Behavioral Guidelines
 

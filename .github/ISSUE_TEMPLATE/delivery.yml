@@ -1,0 +1,61 @@
+{
+  "name": "交付任务",
+  "description": "需求中心下发的产品交付；澄清阶段不执行",
+  "title": "[交付] ",
+  "labels": [
+    "类型:交付",
+    "状态:澄清需求"
+  ],
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "已有下发 Issue 时直接使用，不重复创建。人工确定后才能改为待开发。"
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "links",
+      "attributes": {
+        "label": "关联与责任",
+        "value": "- 父需求：https://github.com/yujiewanwan/prime_prd/issues/\n- 迭代：\n- 负责人："
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "scope",
+      "attributes": {
+        "label": "交付范围",
+        "description": "用户结果、包括和不包括的范围。"
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "criteria",
+      "attributes": {
+        "label": "完成标准",
+        "value": "- [ ] "
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "dependencies",
+      "attributes": {
+        "label": "必要约束和依赖",
+        "description": "开工依赖、接口、权限；查询任务补充数据规模、索引、分页、去重和性能验证。"
+      },
+      "validations": {
+        "required": false
+      }
+    }
+  ]
+}

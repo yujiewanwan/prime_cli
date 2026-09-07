@@ -1,40 +1,27 @@
-name: issue-gate
+name: Issue Gate
 
 on:
   issues:
-    types: [labeled]
+    types: [opened, edited, labeled, unlabeled, reopened, closed]
 
 permissions:
   contents: read
-  issues: write
+  issues: read
+
+concurrency:
+  group: delivery-issue-${{ github.event.issue.number }}
+  cancel-in-progress: true
 
 jobs:
   issue-gate:
-    if: github.event.label.name == 'agent:ready'
+    if: contains(github.event.issue.labels.*.name, '类型:交付')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: validate
-        run: echo "result=$(node scripts/github-delivery-gate.mjs issue \"$GITHUB_EVENT_PATH\")" >> "$GITHUB_OUTPUT"
-      - uses: actions/github-script@v7
-        env:
-          GATE_RESULT: ${{ steps.validate.outputs.result }}
+        with:
+          persist-credentials: false
+      - uses: actions/github-script@v9
         with:
           script: |
-            const result = JSON.parse(process.env.GATE_RESULT);
-            const marker = `<!-- primecli-issue-gate:${context.issue.number}:${result.message} -->`;
-            const { data: comments } = await github.rest.issues.listComments({
-              ...context.repo,
-              issue_number: context.issue.number,
-              per_page: 100,
-            });
-            if (!comments.some((comment) => comment.body.includes(marker))) {
-              await github.rest.issues.createComment({
-                ...context.repo,
-                issue_number: context.issue.number,
-                body: `${marker}\n${result.message}`,
-              });
-            }
-            if (!result.passed) {
-              core.setFailed(result.message);
-            }
+            const { runIssue } = require('./.github/scripts/delivery-contract.cjs');
+            await runIssue({ github, context, core });
