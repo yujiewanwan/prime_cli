@@ -54,3 +54,16 @@ test('提交正文不能隐藏关闭本仓库或父需求的关键词', () => {
     assert.ok(validatePullRequest(['ci: workflow\n\n' + reference], pr.replace('Closes', 'Refs'), issue).length);
   }
 });
+
+test('关闭事件最终复核，容忍短暂状态回写时差但拒绝持久不一致', async () => {
+  const { runIssue } = require('./delivery-contract.cjs');
+  const done = { ...issue, state: 'closed', state_reason: 'completed', labels: ['类型:交付', '状态:已完成'] };
+  for (const initial of [{ ...done, state: 'open' }, { ...issue, state: 'closed', state_reason: 'completed' }]) {
+    let reads = 0; const failures = [];
+    await runIssue({ github: { rest: { issues: { get: async () => ({ data: ++reads === 1 ? initial : done }) } } }, context: { repo: {}, issue: { number: 703 }, payload: {} }, core: { info() {}, setFailed: error => failures.push(error) }, delay: async () => {} });
+    assert.equal(reads, 2); assert.deepEqual(failures, []);
+  }
+  let reads = 0; const failures = [];
+  await runIssue({ github: { rest: { issues: { get: async () => { reads++; return { data: { ...issue, state: 'closed', state_reason: 'completed' } }; } } } }, context: { repo: {}, issue: { number: 703 }, payload: {} }, core: { info() {}, setFailed: error => failures.push(error) }, delay: async () => {} });
+  assert.equal(reads, 6); assert.equal(failures.length, 1);
+});

@@ -2,7 +2,7 @@ name: Issue Gate
 
 on:
   issues:
-    types: [opened, edited, labeled, unlabeled, reopened]
+    types: [opened, edited, labeled, unlabeled, reopened, closed]
 
 permissions:
   contents: read

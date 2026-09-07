@@ -61,9 +61,19 @@ function validatePullRequest(messages, body, issue) {
   return errors;
 }
 
-async function runIssue({ github, context, core }) {
-  // Read current state, not a stale labeled/unlabeled event during a label replacement.
-  const { data: issue } = await github.rest.issues.get({ ...context.repo, issue_number: context.issue.number });
+async function runIssue({ github, context, core, delay = ms => new Promise(resolve => setTimeout(resolve, ms)) }) {
+  // Labels and native close/reopen operations may arrive separately. Re-read
+  // briefly, but report a persistent mismatch instead of ignoring close events.
+  let issue;
+  for (let attempt = 0; attempt < 6; attempt++) {
+    ({ data: issue } = await github.rest.issues.get({ ...context.repo, issue_number: context.issue.number }));
+    const labels = (issue.labels || []).map(label => typeof label === 'string' ? label : label.name);
+    const phase = labels.filter(label => label.startsWith('状态:'));
+    const mismatch = labels.includes('类型:交付') && phase.length === 1 && issue.state_reason !== 'not_planned'
+      && ((phase[0] === '状态:已完成') !== (issue.state === 'closed'));
+    if (!mismatch || attempt === 5) break;
+    await delay(5000);
+  }
   const errors = validateIssue(issue, context.payload.label?.name === '类型:交付');
   if (errors.length) core.setFailed(errors.join('\n'));
   else core.info('交付结构检查通过；本检查不启动执行或变更状态。');
