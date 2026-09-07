@@ -1,0 +1,16 @@
+name: Review Notification
+
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  pull_request_review_comment:
+    types: [created, edited, deleted]
+
+# PR 来源的事件没有写权限；只唤醒默认分支上的可信检查。
+permissions: {}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'true'

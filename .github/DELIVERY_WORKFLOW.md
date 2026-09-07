@@ -25,7 +25,7 @@ gh issue list --repo yujiewanwan/prime_cli --state open \
 | 状态:澄清需求 / 澄清需求 | 范围可修改，等待人工确定 | Open |
 | 状态:待开发 / 待开发 | 范围明确、开工依赖解除，等待产品 Agent 接手 | Open |
 | 状态:开发中 / 开发中 | 实际开始后立即回写，再做实现、验证和修正 | Open |
-| 状态:待合并 / 待合并 | 完成实现及必要验证，必需 CI 通过，PR 非草稿且无已知合并阻塞 | Open |
+| 状态:待合并 / 待合并 | 完成实现及必要验证，独立 Agent review 与必需 CI 通过，PR 非草稿且无已知合并阻塞 | Open |
 | 状态:已完成 / 已完成 | 全部必需 PR 已合并到目标分支，核实后回写并关闭 | Closed（completed） |
 
 每次变更由执行 Agent 同步完成：
@@ -55,6 +55,21 @@ gh issue edit ISSUE_NUMBER --repo yujiewanwan/prime_cli \
 - 提交遵循 Conventional Commits。沿用产品必要测试和代码质量检查；创建 PR 本身不表示已完成或待合并。纯文档/流程变更无需启动产品服务。
 - 失败、草稿 PR、检查未通过保持开发中；待合并后需要修改则回开发中；实质范围变化回澄清需求。PR 关闭未合并不能标记完成。
 - 合并后核实全部必需 PR、回写已完成、关闭交付及汇总父项，再清理本任务已无未提交/未推送内容的 worktree。取消用 Closed（not planned）并从当前看板归档，不算已完成。
+
+## 独立代码审查（必需）
+
+- “无需额外审核”仅指需求确认和独立人工验收阶段，不取消 PR 代码审查。流程文档、workflow、脚本和产品代码的 PR 都适用。
+- PR 创建后确认 GitHub Codex 自动 review 已触发；未触发时评论 `@codex review`。每次修复并推送新提交后再次请求 review，等待覆盖最新完整 head SHA 的审查结束。
+- 提交 PR 的 Agent 不能用自查、自己的 APPROVED、CI 绿色、review 已触发或 summary 的 Completed 字样代替独立审查通过。必须读取 review 正文、行内意见和线程，修复阻塞问题，取得新版本的独立复审结果。
+- 当前提交仍有 Codex findings 时，即使作者点了 Resolve，也不能算通过；需要新提交和重新 review。旧提交的未解决线程也必须处理，误报交由审查方确认，不由作者自行豁免。
+- 缺少审查、审查仍运行或意见未解决时保持开发中。独立 review 通过、必要 CI 全通过、无合并阻塞后才能进入待合并。合并需用户明确授权，不由提交 Agent 自行决定；不能使用 `--admin` 或绕过检查。
+- 合并前重新读取当前交付状态、review 和 CI，确保仍是同一完整 head SHA，使用 `--match-head-commit` 防止提交变化。历史绿色检查不足以证明当前可合并。
+
+专用 `Agent Review Gate` 使用默认分支的可信脚本检查当前 head 的 Codex 结果和未解决意见，并将 `agent-review` 状态写到该 head。必须同时取得当前提交的 Completed 摘要及 Codex 明确的无问题结论；旧点赞不能代替，输出格式未知时需维护检查。缺少可信证据为 pending，意见未解决为 failure，API 错误不按通过处理；不会自行批准、合并或执行产品任务。PR、review、评论和交付变化会刷新检查；解决线程后可用 `gh workflow run agent-review.yml -f pr=<编号>` 重新核实。
+
+首次引入该 workflow 的 PR 须先由独立 Agent 审查并逐条处理意见，再交用户决定合并；新门禁仅在默认分支部署后运行，不能把尚未部署的检查报告为已生效。
+
+平台强制能力以仓库设置为准：公有仓库可以将 `agent-review` 和产品必要 CI 设为 required checks；私有仓库若套餐不支持分支保护，Agent 仍必须遵守本规则，但不能声称 GitHub 已禁止所有绕过。权限或套餐不足时不更改仓库可见性，不假设平台保护已启用。
 
 ## 校验的边界
 

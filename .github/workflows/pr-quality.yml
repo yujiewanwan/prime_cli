@@ -20,25 +20,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test .github/scripts/delivery-contract.test.cjs
+      - run: node --test .github/scripts/*.test.cjs
       - uses: actions/github-script@v9
         with:
           script: |
             const { runPullRequest } = require('./.github/scripts/delivery-contract.cjs');
             await runPullRequest({ github, context, core });
-
-  verify:
-    name: CLI 验证
-    needs: pr-quality
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
       - run: npm ci
       - run: npm run lint
       - run: npm test
