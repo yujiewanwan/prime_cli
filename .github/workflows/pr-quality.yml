@@ -1,29 +1,45 @@
-name: pr-quality
+name: PR Quality
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
 
 permissions:
   contents: read
+  issues: read
+  pull-requests: read
 
 jobs:
   pr-quality:
+    name: pr-quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'
+      - run: node --test .github/scripts/delivery-contract.test.cjs
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const { runPullRequest } = require('./.github/scripts/delivery-contract.cjs');
+            await runPullRequest({ github, context, core });
+
+  verify:
+    name: CLI 验证
+    needs: pr-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
           cache: npm
       - run: npm ci
-      - run: |
-          git fetch origin "$GITHUB_BASE_REF"
-          git log --format=%s "origin/$GITHUB_BASE_REF..HEAD" > "$RUNNER_TEMP/pr-commits.txt"
-          node scripts/github-delivery-gate.mjs pull-request "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/pr-commits.txt" --fail-on-error
       - run: npm run lint
       - run: npm test
       - run: npm run build
