@@ -82,6 +82,12 @@ async function run({ github, context, core }) {
     const { data: pull } = await github.rest.pulls.get({ ...context.repo, pull_number: number });
     if (pull.state !== 'open') continue;
     const status = { ...context.repo, sha: pull.head.sha, context: 'agent-review' };
+    // Commit statuses are shared by every PR using the same SHA. Never let a
+    // clean PR overwrite the failure of another PR with identical commits.
+    if (pulls.filter(candidate => candidate.head.sha === pull.head.sha).length > 1) {
+      await github.rest.repos.createCommitStatus({ ...status, state: 'failure', description: '多个 Open PR 共用相同提交；各交付须使用独立提交后重新审查。' });
+      continue;
+    }
     await github.rest.repos.createCommitStatus({ ...status, state: 'pending', description: '核对当前交付和独立审查结果。' });
     let result;
     try { result = await evaluate(github, context.repo, pull); }
