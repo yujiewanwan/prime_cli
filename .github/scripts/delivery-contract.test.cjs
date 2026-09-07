@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { validateIssue, validatePullRequest } = require('./delivery-contract.cjs');
 const body = '- 父需求：[prime_prd#8](https://github.com/yujiewanwan/prime_prd/issues/8)\n- 迭代：202609-2（2026-09-07 至 2026-09-13）。\n\n## 交付范围\n支持搜索\n\n## 完成标准\n- [ ] 搜索正确\n';
-const issue = { number: 703, state: 'open', body, labels: [{ name: '类型:交付' }, { name: '状态:待开发' }] };
+const issue = { number: 703, state: 'open', body, labels: [{ name: '类型:交付' }, { name: '状态:开发中' }] };
 const pr = 'Closes #703\nIteration: 202609-2\nPRD Issue: https://github.com/yujiewanwan/prime_prd/issues/8';
 test('当前交付格式及单 PR 追溯通过', () => {
   assert.deepEqual(validateIssue(issue), []);
@@ -33,4 +33,24 @@ test('多 PR 使用 Refs，错误引用和提交不通过', () => {
 });
 test('GitHub 表单三级章节及额外标签兼容', () => {
   assert.deepEqual(validateIssue({ ...issue, body: body.replaceAll('## ', '### '), labels: [...issue.labels, { name: 'documentation' }] }), []);
+});
+
+test('空范围和删除交付类型不能绕过检查', () => {
+  assert.ok(validateIssue({ ...issue, body: body.replace('支持搜索', '') }).length);
+  assert.ok(validateIssue({ ...issue, labels: ['状态:开发中'] }).length);
+  assert.ok(validateIssue({ ...issue, body: '', labels: [] }, true).length);
+});
+test('PR 拒绝已取消、已完成、澄清及未开始的任务', () => {
+  for (const phase of ['澄清需求', '待开发', '已完成']) {
+    assert.ok(validatePullRequest(['ci: workflow'], pr, { ...issue, labels: ['类型:交付', '状态:' + phase] }).length);
+  }
+  for (const reason of ['completed', 'not_planned']) {
+    assert.ok(validatePullRequest(['ci: workflow'], pr, { ...issue, state: 'closed', state_reason: reason }).length);
+  }
+  assert.deepEqual(validatePullRequest(['ci: workflow'], pr, { ...issue, labels: ['类型:交付', '状态:待合并'] }), []);
+});
+test('提交正文不能隐藏关闭本仓库或父需求的关键词', () => {
+  for (const reference of ['Closes #703', 'Fixes #704', 'Closes yujiewanwan/prime_prd#8', 'Resolves https://github.com/yujiewanwan/prime_prd/issues/8']) {
+    assert.ok(validatePullRequest(['ci: workflow\n\n' + reference], pr.replace('Closes', 'Refs'), issue).length);
+  }
 });
