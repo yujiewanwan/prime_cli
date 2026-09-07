@@ -43,3 +43,36 @@ test('审查线程读取全部分页', async () => {
   } };
   assert.deepEqual(await readThreads(github, { owner: 'owner', repo: 'repo' }, 1), [{ isResolved: true }, { isResolved: false }]);
 });
+test('相同 SHA 的多个 PR 不得互相覆盖成通过', async () => {
+  const { run } = require('./agent-review-gate.cjs');
+  const pulls = [1, 2].map(number => ({ number, state: 'open', head: { sha: head } }));
+  const statuses = [];
+  const github = { rest: { pulls: { list: 'pulls', get: async ({ pull_number }) => ({ data: pulls.find(p => p.number === pull_number) }) }, repos: { createCommitStatus: async status => statuses.push(status) } }, paginate: async () => pulls };
+  await run({ github, context: { repo: { owner: 'owner', repo: 'repo' }, payload: {}, eventName: 'issue_comment' }, core: { info() {}, error() {} } });
+  assert.equal(statuses.length, 2);
+  assert.ok(statuses.every(status => status.state === 'failure'));
+});
+test('API 失败或检查期间 head 变化不产生成功状态', async () => {
+  const { run } = require('./agent-review-gate.cjs');
+  for (const mode of ['api-error', 'changed-head']) {
+    const statuses = [];
+    const pull = { number: 1, state: 'open', draft: false, user: { login: 'author' }, head: { sha: head }, body: 'Refs #703\nIteration: 202609-2\nPRD Issue: https://github.com/yujiewanwan/prime_prd/issues/8' };
+    let reads = 0;
+    const github = {
+      rest: {
+        pulls: { list: 'pulls', listReviews: 'reviews', listReviewComments: 'inline', listCommits: 'commits', get: async () => ({ data: ++reads === 2 && mode === 'changed-head' ? { ...pull, head: { sha: 'b'.repeat(40) } } : pull }) },
+        issues: { listComments: 'comments', get: async () => ({ data: { number: 703, state: 'open', labels: ['类型:交付', '状态:开发中'], body: '- 父需求：https://github.com/yujiewanwan/prime_prd/issues/8\n- 迭代：202609-2\n## 交付范围\n修正流程\n## 完成标准\n- [ ] 校验通过' } }) },
+        repos: { createCommitStatus: async status => statuses.push(status) },
+      },
+      paginate: async method => {
+        if (method === 'pulls') return [pull];
+        if (method === 'comments') { if (mode === 'api-error') throw Error('API unavailable'); return fixture().comments; }
+        if (method === 'commits') return [{ commit: { message: 'ci: update workflow' } }];
+        return [];
+      },
+      graphql: async () => ({ repository: { pullRequest: { reviewThreads: { nodes: [], pageInfo: { hasNextPage: false } } } } }),
+    };
+    await run({ github, context: { repo: { owner: 'owner', repo: 'repo' }, payload: {}, eventName: 'issue_comment' }, core: { info() {}, error() {} } });
+    assert.deepEqual(statuses.map(status => status.state), ['pending', 'error']);
+  }
+});
