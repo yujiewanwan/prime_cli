@@ -1,6 +1,6 @@
 ---
 name: primecli-wechat-contact
-description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, daily todos, distribution user lists, and contact distribution. Use when the user mentions 企微触达, 触达统计, 触达跟进, 今日代办, 分发联系人, or 下发线索.
+description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, and daily todos. Use when the user mentions 企微触达, 触达统计, 触达跟进, or 今日代办.
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -8,7 +8,7 @@ allowed-tools: Bash(primecli:*)
 
 开始前必须先读取 `../primecli-shared/SKILL.md`，其中包含安装、登录、权限和安全规则。
 
-本 skill 覆盖 `wechat-touch` 和联系人分发相关命令。
+本 skill 覆盖 `wechat-touch` 统计、跟进和好友归属查询命令。
 
 ## 任务到命令
 
@@ -21,8 +21,6 @@ allowed-tools: Bash(primecli:*)
 | 查看今日代办明细 | `primecli wechat-touch daily-todo` |
 | 查看今日触达跟进统计 | `primecli wechat-touch today-stats` |
 | 查看销售人员（归属员工）列表 | `primecli wechat-touch friend-owners` |
-| 查看可分发人员 | `primecli wechat-touch distribution-users` |
-| 分发联系人 | `primecli wechat-touch distribute -u <userId> -c <count>` |
 
 ## 企微触达统计
 
@@ -106,20 +104,6 @@ primecli wechat-touch friend-owners [--name <name>]
 - 需要 `SUPER_ADMIN` 或 `SALES_DIRECTOR`；当前用户不是这两个角色时不要调用。
 - `--name`：按姓名或用户名子串本地过滤，可用于根据销售名字查找对应的 `userId`。
 - 返回销售人员列表，包含 `userId`、`username`、`name`。
-
-## 联系人分发
-
-```bash
-primecli wechat-touch distribution-users
-primecli wechat-touch distribute -u <userId> -c <count>
-```
-
-- 两个命令都需要 `SUPER_ADMIN`；当前用户不是 `SUPER_ADMIN` 时不要调用。
-- `distribution-users` 查看可分发人员列表。
-- `-u, --user-id`：目标用户 ID，必填。
-- `-c, --count`：分发数量，必填，范围 1-150。
-- 每个用户每天只能分发一次。
-- `distribute` 是写操作；执行前确认目标用户和分发数量。
 
 ## 输出处理
 

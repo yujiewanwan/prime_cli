@@ -2,7 +2,7 @@
 
 ## 背景
 
-当前 `primecli` 只有一个 `skills/primecli/SKILL.md`。随着 PrimeContact API 增多，单个 skill 会同时承担公司查询、企微触达、联系人分发、公众号文章、热点创建等多个领域的触发与执行说明，容易导致：
+当前 `primecli` 只有一个 `skills/primecli/SKILL.md`。随着 PrimeContact API 增多，单个 skill 会同时承担公司查询、企微触达、公众号文章、热点创建等多个领域的触发与执行说明，容易导致：
 
 - front matter `description` 过长，触发边界变模糊。
 - 业务命令和通用认证、权限、安全规则混在一起。
@@ -18,7 +18,7 @@
 - `primecli-company`：公司查询。
 - `primecli-wechat-official`：公众号文章查询、拉取、登录态更新。
 - `primecli-hot-topics`：热点创建。
-- `primecli-wechat-contact`：企微触达和联系人分发，对应当前 `wechat-touch` 与 contact distribution 命令。
+- `primecli-wechat-contact`：企微触达统计、跟进和好友归属查询，对应 `wechat-touch` 命令。
 
 业务 skill 应按 Lark 范式在文档开头要求先读取 `../primecli-shared/SKILL.md`。
 

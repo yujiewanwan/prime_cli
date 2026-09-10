@@ -25,7 +25,7 @@ npx skills add yujiewanwan/prime_cli -y -g
 | ------------------------------ | ----------------------------------------------- |
 | `primecli-shared`              | 通用安装、登录、API 地址、角色权限和安全规则    |
 | `primecli-company`             | PrimeContact 公司查询                           |
-| `primecli-wechat-contact`      | 企微触达统计、跟进列表和联系人分发              |
+| `primecli-wechat-contact`      | 企微触达统计和跟进列表              |
 | `primecli-wechat-official`     | 微信公众号文章和登录态更新                      |
 | `primecli-wecom-conversations` | Agent 企微会话分析队列、上下文和结果回写        |
 | `primecli-hot-topics`          | 查询热点日期/详情，以及从 JSON payload 创建热点 |
@@ -73,13 +73,10 @@ primecli auth profile
 | ----------------------------------------------------- | -------------------------------------------- |
 | `primecli wechat-touch stats`                         | 全员触达统计数据                             |
 | `primecli wechat-touch team-summary`                  | 按个人维度的团队触达汇总                     |
-| `primecli wechat-touch distribution-users`            | 查询可分发人员列表，仅 `SUPER_ADMIN`         |
-| `primecli wechat-touch distribute -u <id> -c <count>` | 分发联系人给指定用户，仅 `SUPER_ADMIN`       |
 | `primecli wechat-touch items`                         | 查询触达跟进列表，包含已绑定群聊 ID          |
 | `primecli wechat-touch item <id>`                     | 按 ID 查询单条触达跟进详情                   |
 
 团队汇总参数：`--start-date <日期>`，`--end-date <日期>`（默认均为当天）
-分发参数：`-u, --user-id <id>`（必填），`-c, --count <count>`（必填，1-150）
 跟进列表参数：`--date <日期>`，`--user-id <userId>`，`--group-bound`，`--no-group-bound`，`--page <页码>`（默认 1），`--size <条数>`（默认 50）
 
 ### 微信公众号
@@ -133,7 +130,7 @@ primecli auth profile
 - 未显式声明角色要求的命令，默认允许已登录用户发起请求；最终权限仍以后端校验为准。
 - 调用后端角色受限接口的命令，必须在 CLI 侧通过 `requireRole(...)` 声明所需角色。
 - 后续新增角色受限命令时，必须同步更新 README 和 Agent Skill 文档中的权限说明。
-- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-touch distribute`、`wechat-touch distribution-users`、`wechat-official articles fetch`、`wechat-official credentials update`，以及所有 `wecom-conversations` 命令。
+- 当前仅 `SUPER_ADMIN` 可用的命令：`wechat-official articles fetch`、`wechat-official credentials update`，以及所有 `wecom-conversations` 命令。
 
 ## 开发
 
