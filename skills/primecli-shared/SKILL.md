@@ -13,7 +13,7 @@ allowed-tools: Bash(primecli:*)
 使用 `primecli`：
 
 - 用户明确要求查询或操作 PrimeContact 中的数据。
-- 用户提到公司查询、企微触达、联系人分发、公众号文章、公众号登录态、热点列表、热点详情、热点创建、文生图等 PrimeContact 能力。
+- 用户提到公司查询、企微触达、公众号文章、公众号登录态、热点列表、热点详情、热点创建、文生图等 PrimeContact 能力。
 
 不要使用 `primecli`：
 
@@ -68,8 +68,6 @@ primecli auth profile
 
 当前 `SUPER_ADMIN` 专属命令：
 
-- `primecli wechat-touch distribute`
-- `primecli wechat-touch distribution-users`
 - `primecli wechat-official articles fetch`
 - `primecli wechat-official credentials update`
 - 所有 `primecli wecom-conversations` 命令

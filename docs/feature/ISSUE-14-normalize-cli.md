@@ -116,7 +116,7 @@ export type PrimeCliConfig = {
 3. `npm test`
 4. `node dist/index.js --help`
 5. `node dist/index.js wechat-touch --help`
-6. `node dist/index.js wechat-touch distribute --user-id 1 --count 0` 应失败并提示数量范围
+6. `node dist/index.js wechat-touch items --page 0` 应失败并提示页码范围
 7. 无 token 时执行需登录命令，应提示先运行 `primecli auth login`
 8. 检查 README / README_CN 与 help 输出的命令列表一致
 

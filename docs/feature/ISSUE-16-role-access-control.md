@@ -7,7 +7,7 @@
 ## 目标
 
 - `auth login` 成功后调用 `/api/auth/profile`，从当前用户 profile 中提取角色并缓存到 `~/.config/primecli/config.json`。
-- 对 `wechat-touch chat`、`wechat-touch distribute`、`wechat-touch distribution-users` 增加本地 `SUPER_ADMIN` 校验。
+- 对声明 `SUPER_ADMIN` 权限的命令执行本地角色校验。
 - 非 `SUPER_ADMIN` 用户在命令 action 发起业务 API 前得到明确错误。
 - 后端 403 仍作为兜底，并输出更友好的权限错误。
 - 更新 Agent Skill 文档，标注相关命令仅 `SUPER_ADMIN` 可用。
@@ -46,8 +46,8 @@
    - 从 profile 中提取角色并保存。
    - 如果 profile 中没有角色，仍保存 token，但不写入角色。
 
-4. 修改 `wechat-touch`：
-   - 对 `chat`、`distribute`、`distribution-users` 链式调用 `requireRole("SUPER_ADMIN")`。
+4. 命令级角色校验：
+   - 受限命令链式调用 `requireRole(...)`，按各命令声明校验角色。
 
 5. 修改 `api-client`：
    - HTTP 401 保持现有重新登录提示。

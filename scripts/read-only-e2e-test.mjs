@@ -42,10 +42,6 @@ try {
     "wechat-touch",
     "friend-owners",
   ]);
-  await runJson("wechat touch distribution users", [
-    "wechat-touch",
-    "distribution-users",
-  ]);
   const items = await runJson("wechat touch items", [
     "wechat-touch",
     "items",

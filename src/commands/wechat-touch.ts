@@ -4,11 +4,6 @@ import { readConfig } from "../lib/config.js";
 import { extractRoles, requireRole } from "../lib/roles.js";
 import { parseIntegerOption, validateDateOption } from "../lib/validation.js";
 
-type DistributeOptions = {
-  userId: string;
-  count: number;
-};
-
 type StatsOptions = {
   userId?: string;
 };
@@ -277,48 +272,6 @@ export function registerWechatTouchCommands(program: Command): void {
         : data;
 
       console.log(JSON.stringify(users, null, 2));
-    });
-
-  wechatTouch
-    .command("distribution-users")
-    .description("List users available for contact distribution")
-    .hook("preAction", requireRole("SUPER_ADMIN"))
-    .action(async () => {
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const client = createApiClient(config);
-      const data = await client.get("/api/wechat-touch/distributions/users");
-      console.log(JSON.stringify(data, null, 2));
-    });
-
-  wechatTouch
-    .command("distribute")
-    .description("Distribute contacts to a user")
-    .requiredOption("-u, --user-id <userId>", "Target user ID")
-    .requiredOption(
-      "-c, --count <count>",
-      "Number of contacts to distribute",
-      (value: string) =>
-        parseIntegerOption(value, "Count", 1, { min: 1, max: 150 }),
-    )
-    .hook("preAction", requireRole("SUPER_ADMIN"))
-    .action(async (options: DistributeOptions) => {
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const client = createApiClient(config);
-      const data = await client.post("/api/wechat-touch/distributions", {
-        userId: options.userId,
-        count: options.count,
-      });
-      console.log(JSON.stringify(data, null, 2));
     });
 
   wechatTouch
