@@ -57,12 +57,6 @@ const cases = [
     stderr: "No saved token. Run `primecli auth login` first.",
   },
   {
-    name: "invalid count",
-    args: ["wechat-touch", "distribute", "--user-id", "1", "--count", "0"],
-    code: 1,
-    stderr: "Count must be at least 1.",
-  },
-  {
     name: "invalid conversation type",
     args: ["wecom-conversations", "pending", "--conversation-type", "GROUP"],
     code: 1,

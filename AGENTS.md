@@ -43,11 +43,10 @@ PR 必须经过独立 Agent 代码审查并处理全部阻塞意见，CI 通过�
   - 在 README / Skill 文档中标注所需角色。
   - 保留后端 403 作为最终权限兜底。
 - 当前 `SUPER_ADMIN` 专属命令：
-  - `primecli wechat-touch chat`
-  - `primecli wechat-touch distribute`
   - `primecli wechat-touch distribution-users`
   - `primecli wechat-official articles fetch`
   - `primecli wechat-official credentials update`
+  - 所有 `primecli wecom-conversations` 命令
 
 构建与验证命令见下方“开发与验证”。
 

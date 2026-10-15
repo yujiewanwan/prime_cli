@@ -4,11 +4,6 @@ import { readConfig } from "../lib/config.js";
 import { extractRoles, requireRole } from "../lib/roles.js";
 import { parseIntegerOption, validateDateOption } from "../lib/validation.js";
 
-type DistributeOptions = {
-  userId: string;
-  count: number;
-};
-
 type StatsOptions = {
   userId?: string;
 };
@@ -26,10 +21,6 @@ type ItemsOptions = {
   size?: string;
 };
 
-type DailyTodoSummaryOptions = {
-  userId?: string;
-};
-
 type FriendOwnersOptions = {
   name?: string;
 };
@@ -42,55 +33,6 @@ type DashboardWechatTouchSummary = {
   total: Record<string, unknown>;
   users: Array<Record<string, unknown>>;
 };
-
-type DailyTodoOptions = {
-  userId?: string;
-  intentLevel?: string;
-  page?: string;
-  size?: string;
-};
-
-type DailyTodoItem = {
-  companyName?: string | null;
-  contactValue?: string | null;
-  wechatId?: string | null;
-  wechatNickname?: string | null;
-  intentLevel?: string | null;
-  followUpNote?: string | null;
-  userId?: number | null;
-  userName?: string | null;
-  username?: string | null;
-};
-
-type PageResponse<T> = {
-  content: T[];
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-};
-
-function compactText(value: string | null | undefined): string {
-  return value && value.trim().length > 0 ? value.trim() : "-";
-}
-
-function todoOwnerName(item: DailyTodoItem): string {
-  const name = compactText(item.userName ?? item.username);
-  return name === "-" ? `员工 ${item.userId ?? "?"}` : name;
-}
-
-function buildDailyTodoGroupName(item: DailyTodoItem): string {
-  const parts = [
-    compactText(item.companyName),
-    todoOwnerName(item),
-    "美加线Prime",
-  ];
-  const nickname = item.wechatNickname?.trim();
-  if (nickname) {
-    parts.splice(1, 0, nickname);
-  }
-  return parts.join("#");
-}
 
 function today(): string {
   const d = new Date();
@@ -117,7 +59,10 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const params = new URLSearchParams();
-      if (options.userId) params.set("userId", options.userId);
+      if (options.userId) {
+        params.set("userId", options.userId);
+        params.set("includeAllEmployees", "true");
+      }
 
       const client = createApiClient(config);
       const query = params.toString();
@@ -125,79 +70,6 @@ export function registerWechatTouchCommands(program: Command): void {
         query ? `/api/wechat-touch/stats?${query}` : "/api/wechat-touch/stats",
       );
       console.log(JSON.stringify(data, null, 2));
-    });
-
-  wechatTouch
-    .command("daily-todo-summary")
-    .description("Get today's wechat touch todo summary grouped by intent level A/B/C/D")
-    .option("--user-id <userId>", "Filter by owner user ID")
-    .action(async (options: DailyTodoSummaryOptions) => {
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const params = new URLSearchParams();
-      if (options.userId) params.set("userId", options.userId);
-
-      const client = createApiClient(config);
-      const query = params.toString();
-      const data = await client.get(
-        query
-          ? `/api/wechat-touch/daily-todo/summary?${query}`
-          : "/api/wechat-touch/daily-todo/summary",
-      );
-      console.log(JSON.stringify(data, null, 2));
-    });
-
-  wechatTouch
-    .command("daily-todo")
-    .description("List today's wechat touch follow-up todo details")
-    .option("--user-id <userId>", "Filter by owner user ID")
-    .option("--intent-level <level>", "Filter by intent level (A/B/C/D)")
-    .option("--page <page>", "Page number", "1")
-    .option("--size <size>", "Page size", "20")
-    .action(async (options: DailyTodoOptions) => {
-      const page = parseIntegerOption(options.page, "Page", 1, { min: 1 });
-      const size = parseIntegerOption(options.size, "Size", 20, { min: 1 });
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const params = new URLSearchParams();
-      params.set("page", String(page));
-      params.set("size", String(size));
-      if (options.userId) params.set("userId", options.userId);
-      if (options.intentLevel) {
-        const level = options.intentLevel.trim().toUpperCase();
-        if (!["A", "B", "C", "D"].includes(level)) {
-          throw new Error("Intent level must be one of A, B, C, D.");
-        }
-        params.set("intentLevel", level);
-      }
-
-      const client = createApiClient(config);
-      const data = await client.get<PageResponse<DailyTodoItem>>(
-        `/api/wechat-touch/daily-todo?${params.toString()}`,
-      );
-
-      const mapped = {
-        ...data,
-        content: data.content.map((item) => ({
-          groupName: buildDailyTodoGroupName(item),
-          companyName: compactText(item.companyName),
-          wechatNickname: compactText(item.wechatNickname),
-          wechatId: compactText(item.wechatId),
-          phone: compactText(item.contactValue),
-          intentLevel: compactText(item.intentLevel),
-          followUpNote: compactText(item.followUpNote),
-          ownerName: todoOwnerName(item),
-        })),
-      };
-      console.log(JSON.stringify(mapped, null, 2));
     });
 
   wechatTouch
@@ -224,9 +96,9 @@ export function registerWechatTouchCommands(program: Command): void {
           wechatStartDate: date,
           wechatEndDate: date,
         });
-        const data = await client.get<{ wechatTouch: DashboardWechatTouchSummary }>(
-          `/api/dashboard/summary?${params.toString()}`,
-        );
+        const data = await client.get<{
+          wechatTouch: DashboardWechatTouchSummary;
+        }>(`/api/dashboard/summary?${params.toString()}`);
         console.log(
           JSON.stringify(
             {
@@ -241,7 +113,10 @@ export function registerWechatTouchCommands(program: Command): void {
       }
 
       const params = new URLSearchParams();
-      if (options.userId) params.set("userId", options.userId);
+      if (options.userId) {
+        params.set("userId", options.userId);
+        params.set("includeAllEmployees", "true");
+      }
 
       const query = params.toString();
       const data = await client.get(
@@ -296,32 +171,6 @@ export function registerWechatTouchCommands(program: Command): void {
     });
 
   wechatTouch
-    .command("distribute")
-    .description("Distribute contacts to a user")
-    .requiredOption("-u, --user-id <userId>", "Target user ID")
-    .requiredOption(
-      "-c, --count <count>",
-      "Number of contacts to distribute",
-      (value: string) =>
-        parseIntegerOption(value, "Count", 1, { min: 1, max: 150 }),
-    )
-    .hook("preAction", requireRole("SUPER_ADMIN"))
-    .action(async (options: DistributeOptions) => {
-      const config = await readConfig();
-
-      if (!config.token) {
-        throw new Error("No saved token. Run `primecli auth login` first.");
-      }
-
-      const client = createApiClient(config);
-      const data = await client.post("/api/wechat-touch/distributions", {
-        userId: options.userId,
-        count: options.count,
-      });
-      console.log(JSON.stringify(data, null, 2));
-    });
-
-  wechatTouch
     .command("items")
     .description("List wechat touch follow-up items")
     .option("--date <date>", "Filter by date (yyyy-MM-dd)")
@@ -350,7 +199,10 @@ export function registerWechatTouchCommands(program: Command): void {
 
       const params = new URLSearchParams();
       if (date) params.set("date", date);
-      if (options.userId) params.set("userId", options.userId);
+      if (options.userId) {
+        params.set("userId", options.userId);
+        params.set("includeAllEmployees", "true");
+      }
       if (options.phone) params.set("phone", options.phone);
       if (options.wechatId) params.set("wechatId", options.wechatId);
       if (options.wechatNickname) {
@@ -360,10 +212,15 @@ export function registerWechatTouchCommands(program: Command): void {
         params.set("friendAccepted", String(options.friendAccepted));
       }
       if (options.wechatExists !== undefined) {
-        const exists = parseIntegerOption(options.wechatExists, "WeChat exists", 0, {
-          min: 0,
-          max: 2,
-        });
+        const exists = parseIntegerOption(
+          options.wechatExists,
+          "WeChat exists",
+          0,
+          {
+            min: 0,
+            max: 2,
+          },
+        );
         params.set("wechatExists", String(exists));
       }
       if (options.groupBound !== undefined) {
@@ -393,5 +250,4 @@ export function registerWechatTouchCommands(program: Command): void {
       const data = await client.get(`/api/wechat-touch/items/${id}`);
       console.log(JSON.stringify(data, null, 2));
     });
-
 }

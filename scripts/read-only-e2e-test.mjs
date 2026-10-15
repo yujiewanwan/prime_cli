@@ -27,16 +27,6 @@ try {
   await runJson("auth profile", ["auth", "profile"]);
   await runJson("company search", ["company", "search", "--name", "test"]);
   await runJson("wechat touch stats", ["wechat-touch", "stats"]);
-  await runJson("wechat touch daily todo summary", [
-    "wechat-touch",
-    "daily-todo-summary",
-  ]);
-  await runJson("wechat touch daily todo", [
-    "wechat-touch",
-    "daily-todo",
-    "--size",
-    "1",
-  ]);
   await runJson("wechat touch today stats", ["wechat-touch", "today-stats"]);
   await runJson("wechat touch friend owners", [
     "wechat-touch",

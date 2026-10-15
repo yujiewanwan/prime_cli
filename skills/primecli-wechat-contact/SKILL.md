@@ -1,6 +1,6 @@
 ---
 name: primecli-wechat-contact
-description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, daily todos, distribution user lists, and contact distribution. Use when the user mentions 企微触达, 触达统计, 触达跟进, 今日代办, 分发联系人, or 下发线索.
+description: Use primecli-wechat-contact for PrimeContact WeChat touch workflows, including outreach stats, follow-up items, friend owners, and distribution user lists. Use when the user mentions 企微触达, 触达统计, 触达跟进, or 可分发人员查询.
 allowed-tools: Bash(primecli:*)
 ---
 
@@ -8,7 +8,7 @@ allowed-tools: Bash(primecli:*)
 
 开始前必须先读取 `../primecli-shared/SKILL.md`，其中包含安装、登录、权限和安全规则。
 
-本 skill 覆盖 `wechat-touch` 和联系人分发相关命令。
+本 skill 覆盖 `wechat-touch` 的统计、跟进记录和人员列表查询。
 
 ## 任务到命令
 
@@ -17,12 +17,9 @@ allowed-tools: Bash(primecli:*)
 | 查看企微触达统计 | `primecli wechat-touch stats [--user-id <userId>]` |
 | 查看触达跟进列表 | `primecli wechat-touch items [--date <date>] [--user-id <userId>] [--phone <phone>] [--wechat-id <wechatId>] [--wechat-nickname <nickname>] [--friend-accepted\|--no-friend-accepted] [--wechat-exists <0\|1\|2>] [--group-bound\|--no-group-bound] [--page <page>] [--size <size>]` |
 | 按 ID 查询触达跟进详情 | `primecli wechat-touch item <id>` |
-| 查看今日代办意向统计 | `primecli wechat-touch daily-todo-summary` |
-| 查看今日代办明细 | `primecli wechat-touch daily-todo` |
 | 查看今日触达跟进统计 | `primecli wechat-touch today-stats` |
 | 查看销售人员（归属员工）列表 | `primecli wechat-touch friend-owners` |
 | 查看可分发人员 | `primecli wechat-touch distribution-users` |
-| 分发联系人 | `primecli wechat-touch distribute -u <userId> -c <count>` |
 
 ## 企微触达统计
 
@@ -30,7 +27,7 @@ allowed-tools: Bash(primecli:*)
 primecli wechat-touch stats [--user-id <userId>]
 ```
 
-- `--user-id`：按负责人筛选；不传则查询当前登录用户。
+- `--user-id`：按负责人筛选；不传则查询当前登录用户。查询其他员工需要 `SUPER_ADMIN` 或 `SALES_DIRECTOR`，普通销售仍由后端限制为本人。
 - 返回今日和近 7 日的触达漏斗数据：总线索数、已跟进、已申请、已通过、已回复、已获取名片、已绑定群聊、通过率。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
 
@@ -41,7 +38,7 @@ primecli wechat-touch items [--date <yyyy-MM-dd>] [--user-id <userId>] [--phone 
 ```
 
 - `--date`：按日期筛选，格式 `yyyy-MM-dd`。
-- `--user-id`：按负责人筛选；不传则查询当前登录用户。
+- `--user-id`：按负责人筛选；不传则查询当前登录用户。查询其他员工需要 `SUPER_ADMIN` 或 `SALES_DIRECTOR`，普通销售仍由后端限制为本人。
 - `--phone`：按手机号筛选。
 - `--wechat-id`：按微信号筛选。
 - `--wechat-nickname`：按微信昵称筛选。
@@ -62,39 +59,16 @@ primecli wechat-touch item <id>
 - `<id>`：触达跟进记录 ID，必填。
 - 普通已登录用户即可调用，最终权限由后端校验。
 
-## 今日代办意向统计
-
-```bash
-primecli wechat-touch daily-todo-summary [--user-id <userId>]
-```
-
-- `--user-id`：按负责人筛选；不传则查询当前登录用户。
-- 返回今日需跟进的客户总数，以及 A/B/C/D 等级分布数量。
-- 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
-
 ## 今日触达跟进统计
 
 ```bash
 primecli wechat-touch today-stats [--user-id <userId>]
 ```
 
-- `--user-id`：按负责人筛选。
+- `--user-id`：按负责人筛选；查询其他员工需要 `SUPER_ADMIN` 或 `SALES_DIRECTOR`。
 - `SUPER_ADMIN` 不传 `--user-id` 时汇总全员今日数据；传入 `--user-id` 则查询指定销售的今日数据。
 - 其他角色不传 `--user-id` 时查询当前登录用户自己。
-- 返回今日总数量、已跟进、已通过、已绑定等关键指标。
-- 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
-
-## 今日代办明细
-
-```bash
-primecli wechat-touch daily-todo [--user-id <userId>] [--intent-level A|B|C|D] [--page <page>] [--size <size>]
-```
-
-- `--user-id`：按负责人筛选；不传则查询当前登录用户。
-- `--intent-level`：按意向等级 A/B/C/D 筛选。
-- `--page`：页码，默认 1。
-- `--size`：每页条数，默认 20。
-- 返回每条待办的群名称、公司名称、微信昵称、微信号、手机号、意向等级、备注和归属员工。群名称按 PrimeContact 前端命名规则自动拼接。
+- 管理员全员查询返回 `today` 和 `users`；个人查询沿用统计接口，返回 `today`、`last7Days` 和 `passRate`，汇报今日数据时读取 `today`。
 - 未显式声明角色要求，默认允许已登录用户请求，最终权限以后端为准。
 
 ## 销售人员（归属员工）列表
@@ -107,19 +81,15 @@ primecli wechat-touch friend-owners [--name <name>]
 - `--name`：按姓名或用户名子串本地过滤，可用于根据销售名字查找对应的 `userId`。
 - 返回销售人员列表，包含 `userId`、`username`、`name`。
 
-## 联系人分发
+## 可分发人员列表
 
 ```bash
 primecli wechat-touch distribution-users
-primecli wechat-touch distribute -u <userId> -c <count>
 ```
 
-- 两个命令都需要 `SUPER_ADMIN`；当前用户不是 `SUPER_ADMIN` 时不要调用。
-- `distribution-users` 查看可分发人员列表。
-- `-u, --user-id`：目标用户 ID，必填。
-- `-c, --count`：分发数量，必填，范围 1-150。
-- 每个用户每天只能分发一次。
-- `distribute` 是写操作；执行前确认目标用户和分发数量。
+- 需要 `SUPER_ADMIN`。
+- 返回可分发人员列表；此命令不执行分发。
+- 自动分发和旧每日待办接口已停用，CLI 不再提供 `distribute`、`daily-todo`、`daily-todo-summary`。分发请使用系统人员管理页面。
 
 ## 输出处理
 

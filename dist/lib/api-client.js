@@ -43,7 +43,15 @@ function mapAxiosError(error) {
         return new Error("Permission denied. Your current account does not have access to this command.");
     }
     if (error.response) {
-        return new Error(`HTTP ${error.response.status}: ${error.response.statusText}`);
+        const data = error.response.data;
+        const message = data !== null &&
+            typeof data === "object" &&
+            "message" in data &&
+            typeof data.message === "string" &&
+            data.message.trim()
+            ? data.message.trim()
+            : error.response.statusText;
+        return new Error(`HTTP ${error.response.status}: ${message}`);
     }
     return new Error(`Network request failed: ${error.message}`);
 }
