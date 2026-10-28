@@ -50,8 +50,8 @@ gh issue edit ISSUE_NUMBER --repo yujiewanwan/prime_cli \
 - 基于最新远端默认分支 `main` 为每个 Issue 建独立 worktree 和分支；保留其他任务的本地改动，不能强制切分支、reset 或把未发布提交带入新任务。主目录脏或有分叉时，可以从 `origin/main` 建隔离副本，不要求清理别人的工作才能开工。
 - 已有交付直接使用原 Issue；在 worktree 的 `docs/feature/ISSUE-<id>-<slug>.md` 记录必要实现范围与验证方式，不重复引入需求审核或第二套状态。
 - 多个独立 Issue 可并行。API、共享文件和数据库迁移依赖写清；不得因本仓库已有另一个 Issue 开发中就阻止所有任务开工。共享数据库写入与固定端口服务必须隔离或协调，不能终止其他任务的服务。
-- PR 使用 [统一模板](pull_request_template.md)，记录本仓库 Issue、原生周迭代、父需求 URL 和验证结果。一个 PR 对应一个交付；一个交付可有多个必需 PR，并在 Issue 中列全。
-- 单 PR 完成交付时使用 `Closes #<id>`；多个必需 PR 时使用 `Refs #<id>`，待全部合并后由执行 Agent 关闭 Issue，防止第一个 PR 合并就提前完成。不得用关闭关键词关闭父需求或其他仓库 Issue。
+- PR 使用 [统一模板](pull_request_template.md)，记录本仓库 Issue、原生周迭代、父需求 URL 和验证结果。每个独立交付 PR 对应一个交付 Issue；需要多个独立 PR 时先拆分各自的交付 Issue。
+- PR 必须关联本仓库对应的交付 Issue，并在 PR 正文单独一行填写 `Closes #<交付Issue编号>`。创建 PR 时不关闭 Issue；PR 通过独立 Agent review 和必要 CI、经授权合并到默认分支后，由 GitHub 自动关闭对应 Issue。多个独立 PR 应拆成各自对应的交付 Issue，不用 `Refs` 代替关闭关联；父需求只用 URL 关联，按子项汇总完成。
 - 提交遵循 Conventional Commits。沿用产品必要测试和代码质量检查；创建 PR 本身不表示已完成或待合并。纯文档/流程变更无需启动产品服务。
 - 失败、草稿 PR、检查未通过保持开发中；待合并后需要修改则回开发中；实质范围变化回澄清需求。PR 关闭未合并不能标记完成。
 - 合并后核实全部必需 PR、回写已完成、关闭交付及汇总父项，再清理本任务已无未提交/未推送内容的 worktree。取消用 Closed（not planned）并从当前看板归档，不算已完成。

@@ -6,7 +6,7 @@ Iteration: <YYYYMM-N>
 PRD Issue: https://github.com/yujiewanwan/prime_prd/issues/<父需求编号>
 GitHub Project: https://github.com/users/yujiewanwan/projects/2
 
-<!-- 多个必需 PR 时将 Closes 改为 Refs；全部合并后再关闭交付。不要关闭父需求。 -->
+<!-- 必须填写上方 Closes 关联；合并到默认分支后 GitHub 自动关闭对应交付 Issue，创建 PR 时不提前关闭。多个独立 PR 应分别对应交付 Issue，不使用 Refs 代替关闭关联；不要关闭父需求。 -->
 
 ## 改动说明
 
